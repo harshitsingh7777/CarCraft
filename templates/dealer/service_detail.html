@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Service Appointment | CarCraft Dealer
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .layout {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: #0b0b0b;
+            border-right: 1px solid #202020;
+            padding: 30px 20px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 45px;
+        }
+
+        .logo span {
+            color: #287cff;
+        }
+
+        .nav-title {
+            color: #666;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 13px 15px;
+            margin-bottom: 5px;
+            color: #aaa;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #151515;
+            color: #ffffff;
+        }
+
+        .main {
+            flex: 1;
+            padding: 35px;
+            max-width: 1100px;
+        }
+
+        .back {
+            display: inline-block;
+            color: #888;
+            text-decoration: none;
+            margin-bottom: 25px;
+        }
+
+        .back:hover {
+            color: #ffffff;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .created {
+            color: #777;
+            margin-top: 8px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .pending {
+            background: #302710;
+            color: #e8c35a;
+        }
+
+        .confirmed {
+            background: #102d1c;
+            color: #63d99a;
+        }
+
+        .in_progress {
+            background: #10253a;
+            color: #63a9e8;
+        }
+
+        .completed {
+            background: #102d1c;
+            color: #63d99a;
+        }
+
+        .cancelled {
+            background: #301515;
+            color: #ef7777;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .section {
+            background: #0d0d0d;
+            border: 1px solid #202020;
+            border-radius: 14px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            margin: 0 0 20px;
+            font-size: 18px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 14px 0;
+            border-bottom: 1px solid #1c1c1c;
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: #777;
+        }
+
+        .value {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .notes {
+            color: #aaa;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+        .customer-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .customer-email {
+            color: #777;
+            margin-top: 7px;
+        }
+
+        select {
+            width: 100%;
+            background: #080808;
+            color: #ffffff;
+            border: 1px solid #292929;
+            border-radius: 8px;
+            padding: 12px;
+            outline: none;
+            margin-bottom: 12px;
+        }
+
+        select:focus {
+            border-color: #287cff;
+        }
+
+        .button {
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: 1px solid #287cff;
+            background: #287cff;
+            color: #ffffff;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 850px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                display: block;
+            }
+
+            .status {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            CAR<span>CRAFT</span>
+        </div>
+
+        <div class="nav-title">
+            Management
+        </div>
+
+        <a
+            href="{% url 'dealer:dashboard' %}"
+            class="nav-item"
+        >
+            Dashboard
+        </a>
+
+        <a
+            href="{% url 'dealer:inventory' %}"
+            class="nav-item"
+        >
+            Inventory
+        </a>
+
+        <a
+            href="{% url 'dealer:orders' %}"
+            class="nav-item"
+        >
+            Orders
+        </a>
+
+        <a
+            href="{% url 'dealer:services' %}"
+            class="nav-item active"
+        >
+            Services
+        </a>
+
+        <a href="{% url 'dealer:customers' %}"
+            class="nav-item"
+        >Customers</a>
+
+        <a href="{% url 'dealer:analytics' %}"
+            class="nav-item"
+        >Analytics</a>
+
+        <br>
+
+        <div class="nav-title">
+            System
+        </div>
+
+        <a
+            href="/admin/"
+            class="nav-item"
+        >
+            Django Admin
+        </a>
+
+        <a
+            href="http://localhost:3000/"
+            class="nav-item"
+        >
+            Back to CarCraft
+        </a>
+
+    </aside>
+
+    <main class="main">
+
+        <a
+            href="{% url 'dealer:services' %}"
+            class="back"
+        >
+            ← Back to Services
+        </a>
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>
+                    Service Appointment #{{ appointment.id }}
+                </h1>
+
+                <div class="created">
+                    Booked on
+                    {{ appointment.created_at|date:"d M Y, h:i A" }}
+                </div>
+
+            </div>
+
+            <div>
+
+                <span class="status {{ appointment.status|lower }}">
+                    {{ appointment.get_status_display }}
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="grid">
+
+            <div>
+
+                <div class="section">
+
+                    <h2>
+                        Appointment Details
+                    </h2>
+
+                    <div class="row">
+
+                        <div class="label">
+                            Service
+                        </div>
+
+                        <div class="value">
+                            {{ appointment.service.name }}
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="label">
+                            Price
+                        </div>
+
+                        <div class="value">
+                            ₹{{ appointment.service.price }}
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="label">
+                            Duration
+                        </div>
+
+                        <div class="value">
+                            {{ appointment.service.estimated_duration }}
+                            minutes
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="label">
+                            Date
+                        </div>
+
+                        <div class="value">
+                            {{ appointment.appointment_date|date:"d M Y" }}
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="label">
+                            Time
+                        </div>
+
+                        <div class="value">
+                            {{ appointment.appointment_time|time:"h:i A" }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <h2>
+                        Vehicle
+                    </h2>
+
+                    <div class="row">
+
+                        <div class="label">
+                            Vehicle
+                        </div>
+
+                        <div class="value">
+                            {{ appointment.vehicle.brand }}
+                            {{ appointment.vehicle.model }}
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="label">
+                            Variant
+                        </div>
+
+                        <div class="value">
+                            {{ appointment.vehicle.variant|default:"—" }}
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="label">
+                            Year
+                        </div>
+
+                        <div class="value">
+                            {{ appointment.vehicle.year }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <h2>
+                        Customer Notes
+                    </h2>
+
+                    {% if appointment.notes %}
+
+                    <div class="notes">
+                        {{ appointment.notes }}
+                    </div>
+
+                    {% else %}
+
+                    <div class="notes">
+                        No notes were provided.
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <div class="section">
+
+                    <h2>
+                        Customer
+                    </h2>
+
+                    <div class="customer-name">
+                        {{ appointment.customer.username }}
+                    </div>
+
+                    <div class="customer-email">
+                        {{ appointment.customer.email }}
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <h2>
+                        Update Status
+                    </h2>
+
+                    <form
+                        method="post"
+                        action="{% url 'dealer:update_service_status' appointment.id %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <select name="status">
+
+                            {% for value, label in status_choices %}
+
+                            <option
+                                value="{{ value }}"
+                                {% if appointment.status == value %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ label }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                        <button
+                            type="submit"
+                            class="button"
+                        >
+                            Update Status
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
+
+

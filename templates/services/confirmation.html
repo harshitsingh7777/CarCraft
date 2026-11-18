@@ -1,0 +1,114 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+
+<section class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7">
+
+            <div class="card border-0 shadow-sm text-center">
+
+                <div class="card-body p-5">
+
+                    <div
+                        class="mx-auto mb-4 d-flex align-items-center justify-content-center rounded-circle"
+                        style="
+                            width:80px;
+                            height:80px;
+                            background:#e8f7ee;
+                            color:#198754;
+                            font-size:40px;
+                        "
+                    >
+                        ✓
+                    </div>
+
+                    <h1 class="fw-bold">
+                        Appointment Confirmed
+                    </h1>
+
+                    <p class="text-muted mb-4">
+                        Your CarCraft service appointment has been
+                        successfully booked.
+                    </p>
+
+                    <div class="text-start bg-light rounded-3 p-4 mb-4">
+
+                        <div class="row mb-3">
+                            <div class="col-5 text-muted">
+                                Service
+                            </div>
+
+                            <div class="col-7 fw-semibold">
+                                {{ appointment.service.name }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-5 text-muted">
+                                Vehicle
+                            </div>
+
+                            <div class="col-7 fw-semibold">
+                                {{ appointment.vehicle.brand }}
+                                {{ appointment.vehicle.model }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-5 text-muted">
+                                Date
+                            </div>
+
+                            <div class="col-7 fw-semibold">
+                                {{ appointment.appointment_date }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5 text-muted">
+                                Time
+                            </div>
+
+                            <div class="col-7 fw-semibold">
+                                {{ appointment.appointment_time }}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="d-grid gap-2">
+
+                        <!-- BACK TO SERVICES -->
+
+                        <a
+                            href="{% url 'services:service_list' %}"
+                            class="btn btn-primary"
+                        >
+                            Back to Services
+                        </a>
+
+                        <!-- BACK TO NEXT.JS HOMEPAGE -->
+
+                        <a
+                            href="http://localhost:3000/"
+                            class="btn btn-outline-dark"
+                        >
+                            Go to Homepage
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

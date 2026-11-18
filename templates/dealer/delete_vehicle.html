@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Delete Vehicle | CarCraft</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .layout {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: #0b0b0b;
+            border-right: 1px solid #202020;
+            padding: 30px 20px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 45px;
+        }
+
+        .logo span {
+            color: #287cff;
+        }
+
+        .nav-title {
+            color: #666;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 13px 15px;
+            margin-bottom: 5px;
+            color: #aaa;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #151515;
+            color: #ffffff;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .confirmation {
+            width: 100%;
+            max-width: 600px;
+            background: #0d0d0d;
+            border: 1px solid #202020;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .warning {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            background: #301515;
+            color: #ef7777;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: 28px;
+        }
+
+        .message {
+            color: #888;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .vehicle {
+            background: #080808;
+            border: 1px solid #202020;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 30px;
+        }
+
+        .vehicle-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .vehicle-variant {
+            color: #777;
+            margin-top: 6px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 13px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            border: 1px solid #292929;
+            background: #111111;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .button.delete {
+            background: #b52d2d;
+            border-color: #b52d2d;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 600px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .confirmation {
+                padding: 25px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            CAR<span>CRAFT</span>
+        </div>
+
+        <div class="nav-title">
+            Management
+        </div>
+
+        <a
+            href="{% url 'dealer:dashboard' %}"
+            class="nav-item"
+        >
+            Dashboard
+        </a>
+
+        <a
+            href="{% url 'dealer:inventory' %}"
+            class="nav-item active"
+        >
+            Inventory
+        </a>
+
+        <a href="#" class="nav-item">
+            Orders
+        </a>
+
+        <a href="{% url 'dealer:services' %}" class="nav-item">Services</a>
+
+        <a href="{% url 'dealer:customers' %}" class="nav-item">Customers</a>
+
+        <a href="{% url 'dealer:analytics' %}" class="nav-item">Analytics</a>
+
+        <br>
+
+        <div class="nav-title">
+            System
+        </div>
+
+        <a
+            href="/admin/"
+            class="nav-item"
+        >
+            Django Admin
+        </a>
+
+        <a
+            href="http://localhost:3000/"
+            class="nav-item"
+        >
+            Back to CarCraft
+        </a>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="confirmation">
+
+            <div class="warning">
+                !
+            </div>
+
+            <h1>
+                Delete Vehicle?
+            </h1>
+
+            <div class="message">
+                This action will permanently remove this vehicle
+                from the dealership inventory.
+            </div>
+
+            <div class="vehicle">
+
+                <div class="vehicle-name">
+                    {{ vehicle.brand }} {{ vehicle.model }}
+                </div>
+
+                {% if vehicle.variant %}
+
+                <div class="vehicle-variant">
+                    {{ vehicle.variant }}
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <div class="actions">
+
+                <a
+                    href="{% url 'dealer:inventory' %}"
+                    class="button"
+                >
+                    Cancel
+                </a>
+
+                <form
+                    method="post"
+                    style="display: inline;"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="button delete"
+                    >
+                        Confirm Delete
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
+
+
+

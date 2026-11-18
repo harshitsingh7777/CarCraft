@@ -1,0 +1,188 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}{{ product.name }} | CarCraft{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/carcraft-store.css' %}">
+
+<div class="carcraft-store">
+
+    <!-- NAVIGATION -->
+    <nav class="cc-navbar">
+
+        <a href="http://localhost:3000/" class="cc-brand">
+            CAR<span>CRAFT</span>
+        </a>
+
+        <div class="cc-nav-right">
+
+            <a
+                href="{% url 'store_home' %}"
+                class="cc-nav-link"
+            >
+                Store
+            </a>
+
+            <a
+                href="{% url 'cart' %}"
+                class="cc-nav-link"
+            >
+                Cart
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="cc-container cc-detail">
+
+        <!-- BACK -->
+        <a
+            href="{% url 'store_home' %}"
+            class="cc-back"
+        >
+            ← Back to Store
+        </a>
+
+
+        <div class="cc-detail-grid">
+
+            <!-- PRODUCT IMAGE -->
+            <div class="cc-detail-image">
+
+                {% if product.image %}
+
+                    <img
+                        src="{{ product.image.url }}"
+                        alt="{{ product.name }}"
+                    >
+
+                {% else %}
+
+                    <div class="cc-detail-placeholder">
+                        CARCRAFT COMPONENT
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- PRODUCT INFORMATION -->
+            <div>
+
+                <div class="cc-detail-category">
+                    {{ product.category.name }}
+                </div>
+
+
+                <h1 class="cc-detail-title">
+                    {{ product.name }}
+                </h1>
+
+
+                <p class="cc-detail-description">
+                    {{ product.description }}
+                </p>
+
+
+                <div class="cc-detail-price">
+                    ₹{{ product.price }}
+                </div>
+
+
+                <!-- PRODUCT META -->
+                <div class="cc-detail-meta">
+
+                    <div class="cc-meta-row">
+
+                        <span class="cc-meta-label">
+                            SKU
+                        </span>
+
+                        <span class="cc-meta-value">
+                            {{ product.sku }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="cc-meta-row">
+
+                        <span class="cc-meta-label">
+                            Availability
+                        </span>
+
+                        {% if product.stock_quantity > 0 %}
+
+                            <span class="cc-meta-value cc-stock-good">
+                                {{ product.stock_quantity }} AVAILABLE
+                            </span>
+
+                        {% else %}
+
+                            <span class="cc-meta-value cc-stock-none">
+                                OUT OF STOCK
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- ADD TO CART -->
+                {% if product.stock_quantity > 0 %}
+
+                    <form
+                        method="post"
+                        action="{% url 'add_to_cart' product.id %}"
+                        class="cc-add-form"
+                    >
+
+                        {% csrf_token %}
+
+                        <input
+                            type="number"
+                            name="quantity"
+                            value="1"
+                            min="1"
+                            max="{{ product.stock_quantity }}"
+                            class="cc-quantity"
+                            required
+                        >
+
+                        <button
+                            type="submit"
+                            class="cc-button cc-button-primary"
+                        >
+                            Add to Cart
+                        </button>
+
+                    </form>
+
+                {% else %}
+
+                    <button
+                        type="button"
+                        class="cc-button cc-button-outline"
+                        disabled
+                    >
+                        Out of Stock
+                    </button>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+{% endblock %}

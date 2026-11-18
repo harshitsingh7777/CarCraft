@@ -1,0 +1,11 @@
+metric,value
+Original rows,140904
+Final rows,140904
+Original columns,12
+Final columns,12
+Duplicate rows removed,0
+Missing values,0
+Minimum required rows,50000
+Minimum required columns,11
+Rows requirement satisfied,YES
+Columns requirement satisfied,YES

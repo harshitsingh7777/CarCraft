@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers | CarCraft Dealer</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; background: #050505; color: #fff; font-family: Arial, Helvetica, sans-serif; }
+        .dashboard { min-height: 100vh; display: flex; }
+        .sidebar { width: 250px; min-height: 100vh; background: #0b0b0b; border-right: 1px solid #202020; padding: 30px 20px; }
+        .logo { font-size: 22px; font-weight: 700; letter-spacing: 4px; margin-bottom: 45px; }
+        .logo span { color: #287cff; }
+        .nav-title { color: #666; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+        .nav-item { display: block; padding: 13px 15px; margin-bottom: 5px; color: #aaa; text-decoration: none; border-radius: 8px; }
+        .nav-item:hover, .nav-item.active { background: #151515; color: #fff; }
+        .main { flex: 1; padding: 35px; overflow-x: auto; }
+        .topbar { margin-bottom: 35px; }
+        .topbar h1 { margin: 0; font-size: 30px; }
+        .subtitle { color: #777; margin-top: 8px; }
+        .table-box { background: #0d0d0d; border: 1px solid #202020; border-radius: 14px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; min-width: 750px; }
+        th, td { padding: 18px 20px; text-align: left; border-bottom: 1px solid #202020; }
+        th { color: #666; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
+        td { color: #ddd; }
+        tr:last-child td { border-bottom: none; }
+        .name { color: #fff; font-weight: 600; }
+        .email { color: #888; }
+        .count { color: #287cff; font-weight: 600; }
+        .empty { padding: 50px; text-align: center; color: #666; }
+        @media (max-width: 700px) {
+            .dashboard { display: block; }
+            .sidebar { width: 100%; min-height: auto; }
+            .main { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <aside class="sidebar">
+        <div class="logo">CAR<span>CRAFT</span></div>
+
+        <div class="nav-title">Management</div>
+
+        <a href="{% url 'dealer:dashboard' %}" class="nav-item">Dashboard</a>
+        <a href="{% url 'dealer:inventory' %}" class="nav-item">Inventory</a>
+        <a href="{% url 'dealer:orders' %}" class="nav-item">Orders</a>
+        <a href="{% url 'dealer:services' %}" class="nav-item">Services</a>
+        <a href="{% url 'dealer:customers' %}" class="nav-item active">Customers</a>
+        <a href="{% url 'dealer:analytics' %}" class="nav-item">Analytics</a>
+
+        <br>
+
+        <div class="nav-title">System</div>
+
+        <a href="/admin/" class="nav-item">Django Admin</a>
+        <a href="http://localhost:3000/" class="nav-item">Back to CarCraft</a>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <h1>Customers</h1>
+            <div class="subtitle">Customer accounts and activity</div>
+        </div>
+
+        <div class="table-box">
+            {% if customers %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Orders</th>
+                        <th>Services</th>
+                        <th>Joined</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for customer in customers %}
+                    <tr>
+                        <td class="name">{{ customer.username }}</td>
+                        <td class="email">{{ customer.email|default:"—" }}</td>
+                        <td class="count">{{ customer.order_count }}</td>
+                        <td class="count">{{ customer.service_count }}</td>
+                        <td>{{ customer.date_joined|date:"d M Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty">No customers found.</div>
+            {% endif %}
+        </div>
+    </main>
+</div>
+</body>
+</html>

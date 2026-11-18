@@ -1,0 +1,707 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Login | CarCraft</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+
+            width: 100%;
+            min-height: 100%;
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            background: #05070a;
+            color: #ffffff;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* =========================================
+           PAGE
+        ========================================= */
+
+        .auth-page {
+
+            position: relative;
+
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            background: #05070a;
+        }
+
+        /* =========================================
+           BACKGROUND VIDEO
+        ========================================= */
+
+        .auth-video {
+
+            position: fixed;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            z-index: 0;
+
+            pointer-events: none;
+        }
+
+        /* =========================================
+           VIDEO DARK OVERLAY
+        ========================================= */
+
+        .auth-video-overlay {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 1;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(3, 7, 13, 0.94) 0%,
+                    rgba(3, 7, 13, 0.78) 42%,
+                    rgba(3, 7, 13, 0.58) 100%
+                );
+
+            pointer-events: none;
+        }
+
+        .auth-video-overlay::after {
+
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(3, 7, 13, 0.72) 0%,
+                    transparent 35%,
+                    rgba(3, 7, 13, 0.88) 100%
+                );
+        }
+
+        /* =========================================
+           TOP BRAND
+        ========================================= */
+
+        .auth-brand {
+
+            position: fixed;
+
+            top: 34px;
+            left: 58px;
+
+            z-index: 10;
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            font-size: 27px;
+
+            font-weight: 800;
+
+            letter-spacing: -0.045em;
+
+            line-height: 1;
+
+            text-transform: uppercase;
+
+            transition:
+                opacity 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .auth-brand:hover {
+
+            opacity: 0.78;
+
+            transform:
+                translateX(2px);
+        }
+
+        /* =========================================
+           BACK
+        ========================================= */
+
+        .back-home {
+
+            position: fixed;
+
+            top: 36px;
+            right: 58px;
+
+            z-index: 10;
+
+            color:
+                rgba(255,255,255,0.62);
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: 500;
+
+            letter-spacing: 0.05em;
+
+            transition:
+                color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .back-home:hover {
+
+            color: #ffffff;
+
+            transform:
+                translateX(-3px);
+        }
+
+        /* =========================================
+           MAIN
+        ========================================= */
+
+        .auth-wrapper {
+
+            position: relative;
+
+            z-index: 5;
+
+            width:
+                min(440px, calc(100% - 40px));
+
+            margin-top: 35px;
+        }
+
+        .auth-eyebrow {
+
+            margin-bottom: 13px;
+
+            color: #6fa8ff;
+
+            font-size: 10px;
+
+            font-weight: 750;
+
+            letter-spacing: 0.24em;
+
+            text-transform: uppercase;
+        }
+
+        .auth-title {
+
+            margin: 0;
+
+            color: #ffffff;
+
+            font-size:
+                clamp(42px, 5vw, 62px);
+
+            font-weight: 800;
+
+            line-height: 0.92;
+
+            letter-spacing: -0.065em;
+        }
+
+        .auth-subtitle {
+
+            max-width: 390px;
+
+            margin: 17px 0 28px;
+
+            color:
+                rgba(255,255,255,0.58);
+
+            font-size: 14px;
+
+            line-height: 1.7;
+        }
+
+        /* =========================================
+           CARD
+        ========================================= */
+
+        .auth-card {
+
+            position: relative;
+
+            padding: 30px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.14);
+
+            border-radius: 20px;
+
+            background:
+                rgba(7, 11, 18, 0.62);
+
+            backdrop-filter:
+                blur(22px);
+
+            -webkit-backdrop-filter:
+                blur(22px);
+
+            box-shadow:
+                0 30px 90px
+                rgba(0,0,0,0.45);
+        }
+
+        .auth-card::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            left: 12%;
+            right: 12%;
+
+            height: 1px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255,255,255,0.35),
+                    transparent
+                );
+        }
+
+        /* =========================================
+           ERROR
+        ========================================= */
+
+        .auth-error {
+
+            margin-bottom: 20px;
+
+            padding: 12px 14px;
+
+            border-radius: 9px;
+
+            border:
+                1px solid
+                rgba(255,90,90,0.25);
+
+            background:
+                rgba(255,70,70,0.09);
+
+            color: #ffaaaa;
+
+            font-size: 13px;
+        }
+
+        /* =========================================
+           FORM
+        ========================================= */
+
+        .form-group {
+
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color:
+                rgba(255,255,255,0.72);
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.14em;
+
+            text-transform: uppercase;
+        }
+
+        .form-input {
+
+            width: 100%;
+
+            height: 52px;
+
+            padding: 0 15px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.14);
+
+            border-radius: 9px;
+
+            outline: none;
+
+            background:
+                rgba(0,0,0,0.28);
+
+            color: #ffffff;
+
+            font-family: inherit;
+
+            font-size: 14px;
+
+            transition:
+                border-color 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .form-input::placeholder {
+
+            color:
+                rgba(255,255,255,0.30);
+        }
+
+        .form-input:focus {
+
+            border-color:
+                rgba(40,124,255,0.85);
+
+            background:
+                rgba(0,0,0,0.38);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(40,124,255,0.10);
+        }
+
+        /* =========================================
+           BUTTON
+        ========================================= */
+
+        .auth-button {
+
+            width: 100%;
+
+            height: 53px;
+
+            margin-top: 5px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #287cff;
+
+            color: #ffffff;
+
+            font-family: inherit;
+
+            font-size: 12px;
+
+            font-weight: 750;
+
+            letter-spacing: 0.13em;
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .auth-button:hover {
+
+            background: #3d8aff;
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 14px 35px
+                rgba(40,124,255,0.25);
+        }
+
+        .auth-button:active {
+
+            transform:
+                translateY(0);
+        }
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        .auth-footer {
+
+            margin: 22px 0 0;
+
+            text-align: center;
+
+            color:
+                rgba(255,255,255,0.42);
+
+            font-size: 12px;
+        }
+
+        .auth-footer a {
+
+            color: #6fa8ff;
+
+            text-decoration: none;
+
+            font-weight: 650;
+        }
+
+        .auth-footer a:hover {
+
+            color: #9bc2ff;
+        }
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 650px) {
+
+            .auth-brand {
+
+                top: 24px;
+                left: 24px;
+
+                font-size: 21px;
+            }
+
+            .back-home {
+
+                top: 28px;
+                right: 24px;
+
+                font-size: 11px;
+            }
+
+            .auth-wrapper {
+
+                margin-top: 55px;
+            }
+
+            .auth-card {
+
+                padding: 23px 20px;
+
+                border-radius: 17px;
+            }
+
+            .auth-title {
+
+                font-size: 43px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="auth-page">
+
+    <!-- =========================================
+         CINEMATIC VIDEO
+    ========================================= -->
+
+    <video
+        class="auth-video"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+        aria-hidden="true"
+    >
+        <source
+            src="{% static 'videos/auth-background.mp4' %}"
+            type="video/mp4"
+        >
+    </video>
+
+
+    <!-- =========================================
+         VIDEO OVERLAY
+    ========================================= -->
+
+    <div class="auth-video-overlay"></div>
+
+
+    <!-- =========================================
+         CARCRAFT WORDMARK
+    ========================================= -->
+
+    <a
+        href="http://127.0.0.1:3000/"
+        class="auth-brand"
+    >
+        CARCRAFT
+    </a>
+
+
+    <!-- =========================================
+         BACK
+    ========================================= -->
+
+    <a
+        href="http://127.0.0.1:3000/"
+        class="back-home"
+    >
+        ← BACK TO CARCRAFT
+    </a>
+
+
+    <!-- =========================================
+         CONTENT
+    ========================================= -->
+
+    <main class="auth-wrapper">
+
+        <div class="auth-eyebrow">
+            CARCRAFT ACCOUNT
+        </div>
+
+        <h1 class="auth-title">
+            Welcome back.
+        </h1>
+
+        <p class="auth-subtitle">
+            Sign in to continue exploring vehicles,
+            services, parts and accessories.
+        </p>
+
+
+        <div class="auth-card">
+
+            {% if error %}
+
+                <div class="auth-error">
+                    {{ error }}
+                </div>
+
+            {% endif %}
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <div class="form-group">
+
+                    <label
+                        class="form-label"
+                        for="username"
+                    >
+                        Username
+                    </label>
+
+                    <input
+                        id="username"
+                        type="text"
+                        name="username"
+                        class="form-input"
+                        placeholder="Enter your username"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label
+                        class="form-label"
+                        for="password"
+                    >
+                        Password
+                    </label>
+
+                    <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        class="form-input"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="auth-button"
+                >
+                    LOGIN
+                </button>
+
+            </form>
+
+
+            <p class="auth-footer">
+
+                Don't have an account?
+
+                <a href="{% url 'register' %}">
+                    Create one
+                </a>
+
+            </p>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Appointment Details | CarCraft</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .navbar {
+            height: 80px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 5px;
+        }
+
+        .logo span {
+            color: #287cff;
+        }
+
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            border: 1px solid #292929;
+            border-radius: 8px;
+            padding: 12px 20px;
+        }
+
+        .container {
+            width: min(850px, 92%);
+            margin: 55px auto;
+        }
+
+        .back {
+            color: #888;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+
+        .back:hover {
+            color: #fff;
+        }
+
+        .card {
+            background: #0d0d0d;
+            border: 1px solid #222;
+            border-radius: 15px;
+            padding: 35px;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #222;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .id {
+            color: #777;
+            margin-top: 8px;
+        }
+
+        .status {
+            padding: 9px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .pending {
+            background: #332a16;
+            color: #f5c76b;
+        }
+
+        .confirmed {
+            background: #122b3e;
+            color: #55b7ff;
+        }
+
+        .in_progress {
+            background: #28203d;
+            color: #b99cff;
+        }
+
+        .completed {
+            background: #123326;
+            color: #52d69a;
+        }
+
+        .cancelled {
+            background: #381c1c;
+            color: #ff7474;
+        }
+
+        .section {
+            padding: 28px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section h2 {
+            font-size: 17px;
+            margin: 0 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .field {
+            background: #111;
+            border: 1px solid #202020;
+            border-radius: 9px;
+            padding: 17px;
+        }
+
+        .label {
+            color: #666;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .value {
+            color: #ddd;
+        }
+
+        .notes {
+            color: #aaa;
+            line-height: 1.7;
+            background: #111;
+            border: 1px solid #202020;
+            border-radius: 9px;
+            padding: 17px;
+        }
+
+        @media (max-width: 650px) {
+            .top {
+                flex-direction: column;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <a href="http://localhost:3000/" style="text-decoration:none;color:#fff;">
+        <div class="logo">
+            CAR<span>CRAFT</span>
+        </div>
+    </a>
+
+    <a
+        href="{% url 'services:my_bookings' %}"
+        class="nav-link"
+    >
+        My Services
+    </a>
+
+</nav>
+
+<div class="container">
+
+    <a
+        href="{% url 'services:my_bookings' %}"
+        class="back"
+    >
+        ← Back to My Services
+    </a>
+
+    <div class="card">
+
+        <div class="top">
+
+            <div>
+                <h1>
+                    {{ appointment.service.name }}
+                </h1>
+
+                <div class="id">
+                    Appointment #{{ appointment.id }}
+                </div>
+            </div>
+
+            <div class="status {{ appointment.status|lower }}">
+                {{ appointment.get_status_display }}
+            </div>
+
+        </div>
+
+        <div class="section">
+
+            <h2>Appointment</h2>
+
+            <div class="grid">
+
+                <div class="field">
+                    <div class="label">
+                        Date
+                    </div>
+
+                    <div class="value">
+                        {{ appointment.appointment_date|date:"d M Y" }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label">
+                        Time
+                    </div>
+
+                    <div class="value">
+                        {{ appointment.appointment_time|time:"g:i A" }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label">
+                        Service Price
+                    </div>
+
+                    <div class="value">
+                        ₹{{ appointment.service.price }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label">
+                        Duration
+                    </div>
+
+                    <div class="value">
+                        {{ appointment.service.estimated_duration }} minutes
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="section">
+
+            <h2>Vehicle</h2>
+
+            <div class="grid">
+
+                <div class="field">
+                    <div class="label">
+                        Vehicle
+                    </div>
+
+                    <div class="value">
+                        {{ appointment.vehicle.brand }}
+                        {{ appointment.vehicle.model }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label">
+                        Variant
+                    </div>
+
+                    <div class="value">
+                        {{ appointment.vehicle.variant|default:"—" }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label">
+                        Year
+                    </div>
+
+                    <div class="value">
+                        {{ appointment.vehicle.year }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="label">
+                        Fuel
+                    </div>
+
+                    <div class="value">
+                        {{ appointment.vehicle.get_fuel_type_display }}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="section">
+
+            <h2>Notes</h2>
+
+            <div class="notes">
+                {% if appointment.notes %}
+                    {{ appointment.notes }}
+                {% else %}
+                    No additional notes were provided.
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+

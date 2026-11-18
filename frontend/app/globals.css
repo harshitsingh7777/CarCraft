@@ -1,0 +1,878 @@
+@import "tailwindcss";
+
+:root {
+  --background: #020304;
+  --foreground: #ffffff;
+  --muted: rgba(255, 255, 255, 0.68);
+  --soft: rgba(255, 255, 255, 0.45);
+  --line: rgba(255, 255, 255, 0.28);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  color: var(--foreground);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+
+  background: var(--background);
+  color: var(--foreground);
+
+  font-family:
+    var(--font-geist-sans),
+    system-ui,
+    sans-serif;
+
+  overflow-x: hidden;
+}
+
+button {
+  font: inherit;
+}
+
+/* =====================================================
+   PAGE
+===================================================== */
+
+.carcraft-page {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 400vh;
+
+  background: #020304;
+}
+
+/* =====================================================
+   VIDEO BACKGROUND
+
+   NO TINT
+   NO VIGNETTE
+   NO GRADIENT
+===================================================== */
+
+.cinematic-video-background {
+  position: fixed;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100vh;
+
+  overflow: hidden;
+
+  z-index: 0;
+
+  pointer-events: none;
+
+  background: #020304;
+}
+
+.cinematic-video {
+  position: absolute;
+
+  inset: -2%;
+
+  width: 104%;
+  height: 104%;
+
+  object-fit: cover;
+
+  object-position: center;
+
+  display: block;
+
+  opacity: 0;
+
+  transition:
+    opacity 0.65s
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      );
+
+  will-change:
+    opacity,
+    transform;
+}
+
+/* =====================================================
+   UI
+===================================================== */
+
+.carcraft-ui {
+  position: relative;
+
+  z-index: 10;
+
+  min-height: 400vh;
+
+  pointer-events: none;
+}
+
+.carcraft-ui button,
+.carcraft-ui a {
+  pointer-events: auto;
+}
+
+/* =====================================================
+   TOP BAR
+===================================================== */
+
+.carcraft-topbar {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 86px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding:
+    0 28px;
+
+  z-index: 30;
+}
+
+.carcraft-brand {
+  border: 0;
+
+  padding: 0;
+
+  background: transparent;
+
+  color: #ffffff;
+
+  font-size: 19px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.28em;
+
+  cursor: pointer;
+
+  text-shadow:
+    0 2px 18px
+      rgba(0, 0, 0, 0.35);
+}
+
+.carcraft-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 28px;
+}
+
+.carcraft-actions button {
+  border: 0;
+
+  background: transparent;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.92
+    );
+
+  cursor: pointer;
+
+  font-size: 13px;
+
+  font-weight: 500;
+
+  letter-spacing: 0.04em;
+
+  transition:
+    color 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.carcraft-actions button:hover {
+  color: #ffffff;
+}
+
+.carcraft-search {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+}
+
+.search-icon {
+  font-size: 19px;
+
+  line-height: 1;
+
+  font-weight: 300;
+}
+
+.carcraft-signup {
+  padding:
+    10px 20px !important;
+
+  border:
+    1px solid
+      rgba(
+        255,
+        255,
+        255,
+        0.48
+      ) !important;
+
+  border-radius: 999px !important;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease !important;
+}
+
+.carcraft-signup:hover {
+  background: #ffffff !important;
+
+  color: #000000 !important;
+
+  border-color: #ffffff !important;
+}
+
+/* =====================================================
+   LEFT NAVIGATION
+===================================================== */
+
+.carcraft-nav {
+  position: fixed;
+
+  left: 28px;
+
+  top: 50%;
+
+  transform:
+    translateY(-50%);
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 15px;
+
+  z-index: 30;
+}
+
+.nav-label {
+  margin-bottom: 10px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.5
+    );
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.24em;
+}
+
+.carcraft-nav-item {
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  width: max-content;
+
+  border: 0;
+
+  padding: 0;
+
+  background: transparent;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.58
+    );
+
+  cursor: pointer;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.12em;
+
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.carcraft-nav-item::before {
+  content: "";
+
+  width: 0;
+
+  height: 1px;
+
+  background: #ffffff;
+
+  transition:
+    width 0.3s ease;
+}
+
+.carcraft-nav-item:hover,
+.carcraft-nav-item.active {
+  color: #ffffff;
+
+  transform:
+    translateX(4px);
+}
+
+.carcraft-nav-item.active::before {
+  width: 20px;
+}
+
+.nav-number {
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.4
+    );
+
+  font-size: 9px;
+
+  min-width: 20px;
+}
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.carcraft-content {
+  position: relative;
+
+  width: 100%;
+}
+
+/* =====================================================
+   SECTIONS
+===================================================== */
+
+.carcraft-section {
+  position: relative;
+
+  height: 100vh;
+
+  min-height: 700px;
+
+  display: flex;
+
+  align-items: center;
+
+  padding:
+    100px 8vw;
+
+  pointer-events: none;
+}
+
+.section-content {
+  width:
+    min(
+      560px,
+      80vw
+    );
+
+  margin-left: auto;
+
+  margin-right: 5vw;
+
+  opacity: 0.2;
+
+  transform:
+    translate3d(
+      0,
+      28px,
+      0
+    );
+
+  transition:
+    opacity 0.7s ease,
+    transform 0.8s
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      );
+}
+
+.carcraft-section.active
+  .section-content {
+  opacity: 1;
+
+  transform:
+    translate3d(
+      0,
+      0,
+      0
+    );
+}
+
+/* =====================================================
+   SECTION TEXT
+===================================================== */
+
+.section-number {
+  margin-bottom: 12px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.7
+    );
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.22em;
+}
+
+.section-label {
+  margin-bottom: 14px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.78
+    );
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.22em;
+}
+
+.section-content h2 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size:
+    clamp(
+      46px,
+      5.5vw,
+      82px
+    );
+
+  line-height: 0.98;
+
+  font-weight: 500;
+
+  letter-spacing: -0.05em;
+
+  text-shadow:
+    0 5px 24px
+      rgba(
+        0,
+        0,
+        0,
+        0.32
+      );
+}
+
+.section-content p {
+  max-width: 430px;
+
+  margin:
+    24px 0 0;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.82
+    );
+
+  font-size: 14px;
+
+  line-height: 1.65;
+
+  font-weight: 400;
+
+  text-shadow:
+    0 2px 12px
+      rgba(
+        0,
+        0,
+        0,
+        0.35
+      );
+}
+
+/* =====================================================
+   EXPLORE BUTTON
+===================================================== */
+
+.section-action {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  margin-top: 30px;
+
+  padding:
+    12px 20px;
+
+  border:
+    1px solid
+      rgba(
+        255,
+        255,
+        255,
+        0.5
+      );
+
+  border-radius: 999px;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.08
+    );
+
+  backdrop-filter:
+    blur(5px);
+
+  color: #ffffff;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.15em;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.section-action span {
+  font-size: 15px;
+
+  line-height: 1;
+}
+
+.section-action:hover {
+  background: #ffffff;
+
+  color: #000000;
+
+  border-color: #ffffff;
+
+  transform:
+    translateY(-2px);
+}
+
+/* =====================================================
+   BOTTOM LEFT
+===================================================== */
+
+.carcraft-bottom-left {
+  position: fixed;
+
+  left: 28px;
+
+  bottom: 30px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  z-index: 30;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.62
+    );
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.17em;
+}
+
+.scroll-line {
+  width: 30px;
+
+  height: 1px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.55
+    );
+}
+
+/* =====================================================
+   BOTTOM PROGRESS
+===================================================== */
+
+.carcraft-progress {
+  position: fixed;
+
+  right: 28px;
+
+  bottom: 30px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  z-index: 30;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.4
+    );
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.1em;
+}
+
+.carcraft-progress button {
+  border: 0;
+
+  padding: 0;
+
+  background: transparent;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.4
+    );
+
+  cursor: pointer;
+
+  font-size: 9px;
+
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.carcraft-progress button:hover {
+  color: #ffffff;
+}
+
+.carcraft-progress
+  button.progress-active {
+  color: #ffffff;
+
+  transform:
+    scale(1.1);
+}
+
+.progress-active {
+  color: #ffffff;
+}
+
+.progress-line {
+  width: 60px;
+
+  height: 1px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.3
+    );
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 900px) {
+  .carcraft-topbar {
+    height: 72px;
+
+    padding:
+      0 20px;
+  }
+
+  .carcraft-brand {
+    font-size: 15px;
+  }
+
+  .carcraft-actions {
+    gap: 14px;
+  }
+
+  .carcraft-actions button {
+    font-size: 9px;
+  }
+
+  .carcraft-search {
+    display: none;
+  }
+
+  .carcraft-nav {
+    left: 20px;
+
+    top: auto;
+
+    bottom: 90px;
+
+    transform: none;
+
+    gap: 10px;
+  }
+
+  .nav-label {
+    display: none;
+  }
+
+  .carcraft-nav-item {
+    font-size: 8px;
+  }
+
+  .carcraft-section {
+    min-height: 100svh;
+
+    padding:
+      100px 20px 140px;
+  }
+
+  .section-content {
+    width:
+      min(
+        500px,
+        90vw
+      );
+
+    margin:
+      0 0 0 auto;
+  }
+
+  .section-content h2 {
+    font-size:
+      clamp(
+        40px,
+        11vw,
+        62px
+      );
+  }
+
+  .section-content p {
+    max-width: 340px;
+
+    font-size: 13px;
+  }
+
+  .carcraft-bottom-left {
+    display: none;
+  }
+
+  .carcraft-progress {
+    right: 20px;
+
+    bottom: 25px;
+
+    gap: 9px;
+  }
+
+  .progress-line {
+    width: 30px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .cinematic-video,
+  .section-content,
+  .carcraft-nav-item,
+  .section-action {
+    transition: none;
+  }
+}

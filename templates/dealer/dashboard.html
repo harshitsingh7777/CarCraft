@@ -1,0 +1,478 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+    Dealer Dashboard | CarCraft
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    .dealer-dashboard {
+        min-height: calc(100vh - 76px);
+        display: flex;
+        background: #050505;
+        color: #ffffff;
+    }
+
+    .dealer-sidebar {
+        width: 250px;
+        min-width: 250px;
+        min-height: calc(100vh - 76px);
+        background: #0a0a0a;
+        border-right: 1px solid rgba(255, 255, 255, 0.10);
+        padding: 28px 10px;
+    }
+
+    .dealer-logo {
+        padding: 0 14px 40px;
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        color: #ffffff;
+    }
+
+    .dealer-logo span {
+        color: #287cff;
+    }
+
+    .dealer-nav-label {
+        padding: 0 14px;
+        margin-bottom: 14px;
+        color: #6f7782;
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+    }
+
+    .dealer-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .dealer-nav-item {
+        display: flex;
+        align-items: center;
+        min-height: 46px;
+        padding: 0 14px;
+        border-radius: 9px;
+        color: #b9c1cc;
+        font-size: 16px;
+        text-decoration: none;
+        white-space: nowrap;
+        transition:
+            background 0.2s ease,
+            color 0.2s ease;
+    }
+
+    .dealer-nav-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #ffffff;
+    }
+
+    .dealer-nav-item.active {
+        background: rgba(255, 255, 255, 0.06);
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    .dealer-system {
+        margin-top: 36px;
+    }
+
+    .dealer-nav-item.logout {
+        color: #ff5d5d;
+    }
+
+    .dealer-nav-item.logout:hover {
+        background: rgba(255, 80, 80, 0.08);
+        color: #ff8080;
+    }
+
+    .dealer-main {
+        flex: 1;
+        min-width: 700px;
+        padding: 42px 36px 70px;
+    }
+
+    .dealer-header {
+        margin-bottom: 38px;
+    }
+
+    .dealer-title {
+        margin: 0 0 6px;
+        font-size: 34px;
+        font-weight: 750;
+        letter-spacing: -0.8px;
+    }
+
+    .dealer-subtitle {
+        margin: 0;
+        color: #858d97;
+        font-size: 16px;
+    }
+
+    .dealer-user {
+        margin-top: 18px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 13px;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .dealer-user-label {
+        color: #737c87;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .dealer-user-name {
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 650;
+    }
+
+    .dealer-section {
+        margin-bottom: 34px;
+    }
+
+    .dealer-section-title {
+        margin-bottom: 14px;
+        color: #747d88;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .dealer-stat-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(180px, 1fr));
+        gap: 18px;
+    }
+
+    .dealer-stat-card {
+        min-height: 116px;
+        padding: 26px;
+        background: #0d0d0d;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 15px;
+    }
+
+    .dealer-stat-label {
+        margin-bottom: 14px;
+        color: #7f8791;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .dealer-stat-value {
+        font-size: 32px;
+        font-weight: 750;
+        line-height: 1;
+        color: #ffffff;
+    }
+
+    .dealer-stat-value.blue {
+        color: #287cff;
+    }
+
+    .dealer-stat-value.green {
+        color: #36d995;
+    }
+
+    .dealer-stat-value.red {
+        color: #ff5d5d;
+    }
+
+    .dealer-summary {
+        background: #0d0d0d;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 15px;
+        padding: 25px;
+    }
+
+    .dealer-summary-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 62px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        color: #b8c1cc;
+        font-size: 16px;
+    }
+
+    .dealer-summary-row:last-child {
+        border-bottom: none;
+    }
+
+    .dealer-summary-value {
+        color: #ffffff;
+        font-weight: 700;
+    }
+
+</style>
+
+
+<section class="dealer-dashboard">
+
+    <aside class="dealer-sidebar">
+
+        <div class="dealer-logo">
+            CAR<span>CRAFT</span>
+        </div>
+
+        <div class="dealer-nav-label">
+            Management
+        </div>
+
+        <nav class="dealer-nav">
+
+            <a
+                href="{% url 'dealer:dashboard' %}"
+                class="dealer-nav-item active"
+            >
+                Dashboard
+            </a>
+
+            <a
+                href="{% url 'dealer:inventory' %}"
+                class="dealer-nav-item"
+            >
+                Inventory
+            </a>
+
+            <a
+                href="{% url 'dealer:orders' %}"
+                class="dealer-nav-item"
+            >
+                Orders
+            </a>
+
+            <a
+                href="{% url 'dealer:services' %}"
+                class="dealer-nav-item"
+            >
+                Services
+            </a>
+
+            <a
+                href="{% url 'dealer:customers' %}"
+                class="dealer-nav-item"
+            >
+                Customers
+            </a>
+
+            <a
+                href="{% url 'dealer:analytics' %}"
+                class="dealer-nav-item"
+            >
+                Analytics
+            </a>
+
+        </nav>
+
+
+        <div class="dealer-system">
+
+            <div class="dealer-nav-label">
+                System
+            </div>
+
+            <nav class="dealer-nav">
+
+                <a
+                    href="{% url 'admin:index' %}"
+                    class="dealer-nav-item"
+                >
+                    Django Admin
+                </a>
+
+                <a
+                    href="{% url 'dealer:logout' %}"
+                    class="dealer-nav-item logout"
+                >
+                    Logout
+                </a>
+
+                <a
+                    href="http://localhost:3000/"
+                    class="dealer-nav-item"
+                >
+                    Back to CarCraft
+                </a>
+
+            </nav>
+
+        </div>
+
+    </aside>
+
+
+    <main class="dealer-main">
+
+        <header class="dealer-header">
+
+            <h1 class="dealer-title">
+                Dashboard
+            </h1>
+
+            <p class="dealer-subtitle">
+                CarCraft dealership management
+            </p>
+
+
+            <div class="dealer-user">
+
+                <span class="dealer-user-label">
+                    Logged in as
+                </span>
+
+                <span class="dealer-user-name">
+                    {{ request.user.get_full_name|default:request.user.username }}
+                </span>
+
+            </div>
+
+        </header>
+
+
+        <section class="dealer-section">
+
+            <div class="dealer-section-title">
+                Vehicle Overview
+            </div>
+
+
+            <div class="dealer-stat-grid">
+
+                <div class="dealer-stat-card">
+
+                    <div class="dealer-stat-label">
+                        Total Vehicles
+                    </div>
+
+                    <div class="dealer-stat-value">
+                        {{ total_vehicles }}
+                    </div>
+
+                </div>
+
+
+                <div class="dealer-stat-card">
+
+                    <div class="dealer-stat-label">
+                        Available
+                    </div>
+
+                    <div class="dealer-stat-value blue">
+                        {{ available_vehicles }}
+                    </div>
+
+                </div>
+
+
+                <div class="dealer-stat-card">
+
+                    <div class="dealer-stat-label">
+                        Reserved
+                    </div>
+
+                    <div class="dealer-stat-value">
+                        {{ reserved_vehicles }}
+                    </div>
+
+                </div>
+
+
+                <div class="dealer-stat-card">
+
+                    <div class="dealer-stat-label">
+                        Sold
+                    </div>
+
+                    <div class="dealer-stat-value green">
+                        {{ sold_vehicles }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="dealer-section">
+
+            <div class="dealer-section-title">
+                Management
+            </div>
+
+
+            <div class="dealer-summary">
+
+                <div class="dealer-summary-row">
+
+                    <span>
+                        Inventory
+                    </span>
+
+                    <span class="dealer-summary-value">
+                        {{ total_vehicles }} vehicles
+                    </span>
+
+                </div>
+
+
+                <div class="dealer-summary-row">
+
+                    <span>
+                        Available vehicles
+                    </span>
+
+                    <span class="dealer-summary-value">
+                        {{ available_vehicles }}
+                    </span>
+
+                </div>
+
+
+                <div class="dealer-summary-row">
+
+                    <span>
+                        Reserved vehicles
+                    </span>
+
+                    <span class="dealer-summary-value">
+                        {{ reserved_vehicles }}
+                    </span>
+
+                </div>
+
+
+                <div class="dealer-summary-row">
+
+                    <span>
+                        Sold vehicles
+                    </span>
+
+                    <span class="dealer-summary-value">
+                        {{ sold_vehicles }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Checkout | CarCraft{% endblock %}
+
+{% block content %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/carcraft-store.css' %}"
+>
+
+<div class="carcraft-store">
+
+    <nav class="cc-navbar">
+
+        <a
+            href="http://localhost:3000/"
+            class="cc-brand"
+        >
+            CAR<span>CRAFT</span>
+        </a>
+
+        <div class="cc-nav-right">
+
+            <a
+                href="{% url 'store_home' %}"
+                class="cc-nav-link"
+            >
+                Store
+            </a>
+
+            <a
+                href="{% url 'cart' %}"
+                class="cc-nav-link"
+            >
+                Cart
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="cc-container cc-detail">
+
+        <div class="cc-eyebrow">
+            CARCRAFT / CHECKOUT
+        </div>
+
+        <h1 class="cc-store-title">
+            Complete<br>
+            Order.
+        </h1>
+
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div
+                    style="
+                        margin: 30px 0;
+                        padding: 15px;
+                        border: 1px solid rgba(255,255,255,.15);
+                        color: #fff;
+                        background: rgba(255,255,255,.04);
+                    "
+                >
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <div class="cc-cart-grid">
+
+            <!-- SHIPPING -->
+            <div>
+
+                <form
+                    method="post"
+                >
+
+                    {% csrf_token %}
+
+                    <div class="cc-eyebrow">
+                        DELIVERY
+                    </div>
+
+                    <h2
+                        style="
+                            margin-bottom: 25px;
+                            font-size: 28px;
+                        "
+                    >
+                        Shipping Address
+                    </h2>
+
+
+                    <textarea
+                        name="shipping_address"
+                        class="cc-input"
+                        rows="7"
+                        placeholder="Enter your complete shipping address..."
+                        required
+                    >{{ shipping_address }}</textarea>
+
+
+                    <button
+                        type="submit"
+                        class="cc-button cc-button-primary"
+                        style="margin-top: 20px;"
+                    >
+                        Place Order
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- SUMMARY -->
+            <aside class="cc-summary">
+
+                <h2 class="cc-summary-title">
+                    Order Summary
+                </h2>
+
+
+                {% for item in items %}
+
+                    <div
+                        class="cc-summary-line"
+                    >
+
+                        <span>
+                            {{ item.product.name }}
+                            × {{ item.quantity }}
+                        </span>
+
+                        <span>
+                            ₹{{ item.product.price|floatformat:2 }}
+                        </span>
+
+                    </div>
+
+                {% endfor %}
+
+
+                <div class="cc-summary-total">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <span>
+                        ₹{{ total|floatformat:2 }}
+                    </span>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </main>
+
+</div>
+
+{% endblock %}

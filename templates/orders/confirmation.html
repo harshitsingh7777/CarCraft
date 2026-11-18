@@ -1,0 +1,145 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Order Confirmed | CarCraft{% endblock %}
+
+{% block content %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/carcraft-store.css' %}"
+>
+
+<div class="carcraft-store">
+
+    <nav class="cc-navbar">
+
+        <a
+            href="http://localhost:3000/"
+            class="cc-brand"
+        >
+            CAR<span>CRAFT</span>
+        </a>
+
+        <div class="cc-nav-right">
+
+            <a
+                href="{% url 'store_home' %}"
+                class="cc-nav-link"
+            >
+                Store
+            </a>
+
+            <a
+                href="{% url 'order_list' %}"
+                class="cc-nav-link"
+            >
+                My Orders
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="cc-container cc-detail">
+
+        <div class="cc-empty">
+
+            <div class="cc-empty-number">
+                01 / CONFIRMED
+            </div>
+
+            <h2>
+                Order Confirmed.
+            </h2>
+
+            <p>
+                Your CarCraft order has been successfully placed.
+            </p>
+
+
+            <div
+                style="
+                    margin: 30px auto;
+                    max-width: 500px;
+                    text-align: left;
+                    border-top: 1px solid rgba(255,255,255,.1);
+                    border-bottom: 1px solid rgba(255,255,255,.1);
+                    padding: 20px 0;
+                "
+            >
+
+                <div class="cc-summary-line">
+
+                    <span>
+                        Order
+                    </span>
+
+                    <span>
+                        #{{ order.id }}
+                    </span>
+
+                </div>
+
+
+                <div class="cc-summary-line">
+
+                    <span>
+                        Status
+                    </span>
+
+                    <span>
+                        {{ order.get_status_display }}
+                    </span>
+
+                </div>
+
+
+                <div class="cc-summary-total">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <span>
+                        ₹{{ order.total_amount|floatformat:2 }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div
+                style="
+                    display: flex;
+                    justify-content: center;
+                    gap: 10px;
+                    flex-wrap: wrap;
+                "
+            >
+
+                <a
+                    href="{% url 'orders:order_detail' order.id %}"
+                    class="cc-button cc-button-primary"
+                >
+                    View Order
+                </a>
+
+                <a
+                    href="{% url 'store_home' %}"
+                    class="cc-button cc-button-outline"
+                >
+                    Continue Shopping
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+{% endblock %}

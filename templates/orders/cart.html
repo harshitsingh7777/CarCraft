@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart | CarCraft</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .navbar {
+            height: 80px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 5px;
+        }
+
+        .logo span {
+            color: #287cff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 14px;
+        }
+
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            border: 1px solid #292929;
+            border-radius: 9px;
+            padding: 14px 22px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            border-color: #287cff;
+        }
+
+        .container {
+            width: min(1100px, 92%);
+            margin: 55px auto;
+        }
+
+        h1 {
+            font-size: 38px;
+            margin: 0 0 35px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 25px;
+        }
+
+        .items,
+        .summary {
+            background: #0d0d0d;
+            border: 1px solid #222;
+            border-radius: 14px;
+        }
+
+        .items {
+            padding: 25px;
+        }
+
+        .item {
+            display: grid;
+            grid-template-columns: 90px 1fr auto;
+            gap: 20px;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .product-image {
+            width: 90px;
+            height: 90px;
+            border-radius: 10px;
+            background: #151515;
+            border: 1px solid #252525;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-placeholder {
+            color: #555;
+            font-size: 12px;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .quantity-form {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .quantity-input {
+            width: 65px;
+            padding: 9px;
+            background: #111;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 6px;
+        }
+
+        .update-button {
+            padding: 9px 13px;
+            background: #151515;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .remove-form {
+            margin-top: 8px;
+        }
+
+        .remove-button {
+            background: none;
+            border: none;
+            color: #ff5c5c;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .item-total {
+            font-size: 17px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .summary {
+            padding: 25px;
+            height: fit-content;
+        }
+
+        .summary h2 {
+            margin: 0 0 25px;
+            font-size: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            color: #aaa;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #292929;
+            padding-top: 20px;
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .checkout {
+            display: block;
+            width: 100%;
+            margin-top: 25px;
+            padding: 15px;
+            background: #287cff;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .checkout:hover {
+            background: #1d6fe8;
+        }
+
+        .continue {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            padding: 14px;
+            border: 1px solid #333;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 70px 20px;
+            color: #777;
+        }
+
+        .empty h2 {
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .shop-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 14px 24px;
+            background: #287cff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 800px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .item {
+                grid-template-columns: 70px 1fr;
+            }
+
+            .product-image {
+                width: 70px;
+                height: 70px;
+            }
+
+            .item-total {
+                grid-column: 2;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <a href="http://localhost:3000/" style="text-decoration:none;color:#fff;">
+        <div class="logo">
+            CAR<span>CRAFT</span>
+        </div>
+    </a>
+
+    <div class="nav-links">
+        <a href="http://localhost:3000/" class="nav-link">
+            Home
+        </a>
+
+        <a href="{% url 'orders:cart' %}" class="nav-link">
+            Cart
+        </a>
+    </div>
+
+</nav>
+
+<div class="container">
+
+    <h1>Your Cart</h1>
+
+    {% if items %}
+
+    <div class="layout">
+
+        <div class="items">
+
+            {% for item in items %}
+
+            <div class="item">
+
+                <div class="product-image">
+
+                    {% if item.product.image %}
+                        <img
+                            src="{{ item.product.image.url }}"
+                            alt="{{ item.product.name }}"
+                        >
+                    {% else %}
+                        <div class="product-placeholder">
+                            NO IMAGE
+                        </div>
+                    {% endif %}
+
+                </div>
+
+                <div>
+
+                    <div class="product-name">
+                        {{ item.product.name }}
+                    </div>
+
+                    <div class="product-price">
+                        ₹{{ item.product.price }}
+                    </div>
+
+                    <form
+                        method="post"
+                        action="{% url 'orders:update_cart' item.id %}"
+                        class="quantity-form"
+                    >
+                        {% csrf_token %}
+
+                        <input
+                            type="number"
+                            name="quantity"
+                            value="{{ item.quantity }}"
+                            min="1"
+                            class="quantity-input"
+                        >
+
+                        <button
+                            type="submit"
+                            class="update-button"
+                        >
+                            Update
+                        </button>
+                    </form>
+
+                    <form
+                        method="post"
+                        action="{% url 'orders:remove_from_cart' item.id %}"
+                        class="remove-form"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="remove-button"
+                        >
+                            Remove
+                        </button>
+                    </form>
+
+                </div>
+
+                <div class="item-total">
+                    ₹{% widthratio item.product.price 1 item.quantity %}
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        <div class="summary">
+
+            <h2>Order Summary</h2>
+
+            <div class="summary-row">
+                <span>Items</span>
+                <span>{{ items|length }}</span>
+            </div>
+
+            <div class="summary-total">
+                <span>Total</span>
+                <span>₹{{ total }}</span>
+            </div>
+
+            <a
+                href="{% url 'orders:checkout' %}"
+                class="checkout"
+            >
+                Proceed to Checkout
+            </a>
+
+            <a
+                href="http://localhost:3000/"
+                class="continue"
+            >
+                Continue Shopping
+            </a>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="items">
+
+        <div class="empty">
+
+            <h2>Your cart is empty</h2>
+
+            <p>
+                Add some parts or accessories to your cart.
+            </p>
+
+            <a
+                href="http://localhost:3000/"
+                class="shop-button"
+            >
+                Continue Shopping
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

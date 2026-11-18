@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Orders | CarCraft</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .navbar {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+            background: #090909;
+            border-bottom: 1px solid #202020;
+        }
+
+        .logo {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 4px;
+        }
+
+        .logo span {
+            color: #287cff;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid #252525;
+        }
+
+        .nav-links a:hover {
+            border-color: #287cff;
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 25px;
+        }
+
+        .heading {
+            margin-bottom: 35px;
+        }
+
+        .heading h1 {
+            margin: 0;
+            font-size: 34px;
+        }
+
+        .heading p {
+            color: #777;
+            margin-top: 10px;
+        }
+
+        .orders {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .order {
+            background: #0d0d0d;
+            border: 1px solid #202020;
+            border-radius: 14px;
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .order-number {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .order-date {
+            color: #777;
+            font-size: 13px;
+        }
+
+        .order-total {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #102d1c;
+            color: #63d99a;
+            font-size: 12px;
+        }
+
+        .status.cancelled {
+            background: #301515;
+            color: #ef7777;
+        }
+
+        .view-button {
+            display: inline-block;
+            color: #ffffff;
+            text-decoration: none;
+            background: #287cff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .view-button:hover {
+            opacity: 0.9;
+        }
+
+        .empty {
+            background: #0d0d0d;
+            border: 1px solid #202020;
+            border-radius: 14px;
+            padding: 60px 30px;
+            text-align: center;
+        }
+
+        .empty h2 {
+            margin-top: 0;
+        }
+
+        .empty p {
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .shop-button {
+            display: inline-block;
+            color: #ffffff;
+            text-decoration: none;
+            background: #287cff;
+            padding: 12px 20px;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 800px) {
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .order {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .page {
+                padding: 35px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <a
+        href="http://localhost:3000/"
+        class="logo"
+    >
+        CAR<span>CRAFT</span>
+    </a>
+
+    <div class="nav-links">
+
+        <a href="http://localhost:3000/">
+            Home
+        </a>
+
+        <a href="{% url 'orders:cart' %}">
+            Cart
+        </a>
+
+    </div>
+
+</nav>
+
+<main class="page">
+
+    <div class="heading">
+
+        <h1>
+            My Orders
+        </h1>
+
+        <p>
+            View and track your CarCraft purchases.
+        </p>
+
+    </div>
+
+    {% if orders %}
+
+    <div class="orders">
+
+        {% for order in orders %}
+
+        <div class="order">
+
+            <div>
+
+                <div class="order-number">
+                    Order #{{ order.id }}
+                </div>
+
+                <div class="order-date">
+                    {{ order.created_at|date:"d M Y, h:i A" }}
+                </div>
+
+            </div>
+
+            <div>
+
+                <div class="order-total">
+                    ₹{{ order.total_amount }}
+                </div>
+
+                <br>
+
+                {% if order.status == "CANCELLED" %}
+
+                <span class="status cancelled">
+                    {{ order.get_status_display }}
+                </span>
+
+                {% else %}
+
+                <span class="status">
+                    {{ order.get_status_display }}
+                </span>
+
+                {% endif %}
+
+            </div>
+
+            <div>
+
+                <a
+                    href="{% url 'orders:order_detail' order.id %}"
+                    class="view-button"
+                >
+                    View Order
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty">
+
+        <h2>
+            No Orders Yet
+        </h2>
+
+        <p>
+            Your completed purchases will appear here.
+        </p>
+
+        <a
+            href="http://localhost:3000/"
+            class="shop-button"
+        >
+            Continue Shopping
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</main>
+
+</body>
+</html>

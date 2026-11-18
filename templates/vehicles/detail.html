@@ -1,0 +1,415 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+    {{ vehicle.brand }} {{ vehicle.model }} | CarCraft
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .vehicle-detail-page {
+        background: #050505;
+        min-height: 100vh;
+        color: #f5f5f5;
+        padding: 40px 0 80px;
+    }
+
+    .vehicle-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border: 1px solid #287cff;
+        border-radius: 8px;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: 0.2s ease;
+        margin-bottom: 32px;
+    }
+
+    .vehicle-back:hover {
+        background: #287cff;
+        color: #ffffff;
+    }
+
+    .vehicle-image-wrapper {
+        background: #0b0b0b;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid #1b1b1b;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    .vehicle-image {
+        width: 100%;
+        height: 520px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .vehicle-image-placeholder {
+        height: 520px;
+        background: #101010;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #aeb7c4;
+        font-size: 22px;
+    }
+
+    .vehicle-meta {
+        color: #5fa0ff;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        margin-bottom: 10px;
+    }
+
+    .vehicle-title {
+        color: #ffffff;
+        font-size: clamp(38px, 4vw, 58px);
+        line-height: 1.05;
+        font-weight: 750;
+        margin-bottom: 12px;
+        letter-spacing: -1.5px;
+    }
+
+    .vehicle-variant {
+        color: #b8c1cc;
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 26px;
+    }
+
+    .vehicle-price {
+        color: #287cff;
+        font-size: 34px;
+        font-weight: 750;
+        margin-bottom: 28px;
+    }
+
+    .spec-card {
+        background: #111111;
+        border: 1px solid #242424;
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 28px;
+    }
+
+    .spec-header {
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 700;
+        padding: 22px 24px 12px;
+    }
+
+    .spec-grid {
+        padding: 8px 24px 18px;
+    }
+
+    .spec-item {
+        padding: 14px 0;
+    }
+
+    .spec-label {
+        color: #aeb7c4;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+
+    .spec-value {
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 650;
+    }
+
+    .vehicle-description {
+        margin-bottom: 28px;
+    }
+
+    .vehicle-description h5 {
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .vehicle-description p {
+        color: #b8c1cc;
+        font-size: 15px;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    .vehicle-actions {
+        display: grid;
+        gap: 10px;
+    }
+
+    .enquiry-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 52px;
+        background: #287cff;
+        border: 1px solid #287cff;
+        border-radius: 8px;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 17px;
+        font-weight: 600;
+        transition: 0.2s ease;
+    }
+
+    .enquiry-button:hover {
+        background: #176ce8;
+        border-color: #176ce8;
+        color: #ffffff;
+    }
+
+    .browse-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 48px;
+        background: transparent;
+        border: 1px solid #343434;
+        border-radius: 8px;
+        color: #d5dbe2;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: 0.2s ease;
+    }
+
+    .browse-button:hover {
+        background: #151515;
+        border-color: #555555;
+        color: #ffffff;
+    }
+
+    @media (max-width: 991px) {
+        .vehicle-detail-page {
+            padding: 25px 0 60px;
+        }
+
+        .vehicle-image {
+            height: 400px;
+        }
+
+        .vehicle-image-placeholder {
+            height: 400px;
+        }
+
+        .vehicle-title {
+            font-size: 42px;
+        }
+
+        .vehicle-info {
+            margin-top: 35px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .vehicle-image {
+            height: 280px;
+        }
+
+        .vehicle-image-placeholder {
+            height: 280px;
+        }
+
+        .vehicle-title {
+            font-size: 34px;
+        }
+
+        .vehicle-price {
+            font-size: 28px;
+        }
+
+        .spec-grid {
+            padding-left: 18px;
+            padding-right: 18px;
+        }
+    }
+</style>
+
+<section class="vehicle-detail-page">
+
+    <div class="container">
+
+        <a
+            href="{% url 'vehicle_list' %}"
+            class="vehicle-back"
+        >
+            ← Back to Vehicles
+        </a>
+
+        <div class="row g-5">
+
+            <div class="col-lg-7">
+
+                <div class="vehicle-image-wrapper">
+
+                    {% if vehicle.image %}
+
+                        <img
+                            src="{{ vehicle.image.url }}"
+                            alt="{{ vehicle.brand }} {{ vehicle.model }}"
+                            class="vehicle-image"
+                        >
+
+                    {% else %}
+
+                        <div class="vehicle-image-placeholder">
+                            {{ vehicle.brand }} {{ vehicle.model }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-5 vehicle-info">
+
+                <div class="vehicle-meta">
+                    {{ vehicle.year }} • {{ vehicle.get_fuel_type_display }}
+                </div>
+
+                <h1 class="vehicle-title">
+                    {{ vehicle.brand }} {{ vehicle.model }}
+                </h1>
+
+                {% if vehicle.variant %}
+
+                    <div class="vehicle-variant">
+                        {{ vehicle.variant }}
+                    </div>
+
+                {% endif %}
+
+                <div class="vehicle-price">
+                    ₹{{ vehicle.price }}
+                </div>
+
+                <div class="spec-card">
+
+                    <div class="spec-header">
+                        Vehicle Specifications
+                    </div>
+
+                    <div class="row spec-grid">
+
+                        <div class="col-6 spec-item">
+                            <div class="spec-label">
+                                Fuel
+                            </div>
+
+                            <div class="spec-value">
+                                {{ vehicle.get_fuel_type_display }}
+                            </div>
+                        </div>
+
+                        <div class="col-6 spec-item">
+                            <div class="spec-label">
+                                Transmission
+                            </div>
+
+                            <div class="spec-value">
+                                {{ vehicle.get_transmission_display }}
+                            </div>
+                        </div>
+
+                        <div class="col-6 spec-item">
+                            <div class="spec-label">
+                                Mileage
+                            </div>
+
+                            <div class="spec-value">
+                                {{ vehicle.mileage }}
+                            </div>
+                        </div>
+
+                        <div class="col-6 spec-item">
+                            <div class="spec-label">
+                                Engine
+                            </div>
+
+                            <div class="spec-value">
+                                {{ vehicle.engine|default:"N/A" }}
+                            </div>
+                        </div>
+
+                        <div class="col-6 spec-item">
+                            <div class="spec-label">
+                                Seating
+                            </div>
+
+                            <div class="spec-value">
+                                {{ vehicle.seating_capacity }} Seats
+                            </div>
+                        </div>
+
+                        <div class="col-6 spec-item">
+                            <div class="spec-label">
+                                Color
+                            </div>
+
+                            <div class="spec-value">
+                                {{ vehicle.color }}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% if vehicle.description %}
+
+                    <div class="vehicle-description">
+
+                        <h5>
+                            About this vehicle
+                        </h5>
+
+                        <p>
+                            {{ vehicle.description }}
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+                <div class="vehicle-actions">
+
+                    <a
+                        href="{% url 'vehicle_enquiry' vehicle.id %}"
+                        class="enquiry-button"
+                    >
+                        Enquire About Vehicle
+                    </a>
+
+                    <a
+                        href="{% url 'vehicle_list' %}"
+                        class="browse-button"
+                    >
+                        Browse Other Vehicles
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed | CarCraft</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #050505;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: min(850px, 92%);
+            background: #0d0d0d;
+            border: 1px solid #222;
+            border-radius: 18px;
+            padding: 50px;
+        }
+
+        .success {
+            color: #42d392;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: 38px;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 40px;
+        }
+
+        .order-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .info {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .label {
+            color: #666;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+
+        .value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .items {
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+            margin-bottom: 30px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 18px 0;
+            border-bottom: 1px solid #1b1b1b;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            font-weight: 600;
+        }
+
+        .item-meta {
+            color: #777;
+            margin-top: 6px;
+            font-size: 13px;
+        }
+
+        .item-price {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 35px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 14px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .primary {
+            background: #287cff;
+            color: #fff;
+        }
+
+        .secondary {
+            border: 1px solid #333;
+            color: #fff;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .order-info {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .button {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="success">
+        Order Confirmed
+    </div>
+
+    <h1>Thank you for your order.</h1>
+
+    <div class="subtitle">
+        Your CarCraft order has been placed successfully.
+    </div>
+
+    <div class="order-info">
+
+        <div class="info">
+            <div class="label">ORDER ID</div>
+            <div class="value">#{{ order.id }}</div>
+        </div>
+
+        <div class="info">
+            <div class="label">STATUS</div>
+            <div class="value">{{ order.get_status_display }}</div>
+        </div>
+
+        <div class="info">
+            <div class="label">DATE</div>
+            <div class="value">{{ order.created_at|date:"d M Y" }}</div>
+        </div>
+
+    </div>
+
+    <div class="items">
+
+        {% for item in order.items.all %}
+
+        <div class="item">
+
+            <div>
+                <div class="item-name">
+                    {{ item.product.name }}
+                </div>
+
+                <div class="item-meta">
+                    Quantity: {{ item.quantity }}
+                </div>
+            </div>
+
+            <div class="item-price">
+                ₹{{ item.price }}
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <div class="total">
+        <span>Total</span>
+        <span>₹{{ order.total_amount }}</span>
+    </div>
+
+    <div class="buttons">
+
+        <a
+            href="{% url 'orders:order_detail' order.id %}"
+            class="button primary"
+        >
+            View Order
+        </a>
+
+        <a
+            href="{% url 'orders:my_orders' %}"
+            class="button secondary"
+        >
+            My Orders
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

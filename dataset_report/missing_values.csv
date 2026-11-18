@@ -1,0 +1,13 @@
+column,missing_values,missing_percentage
+brand,0,0.0
+model_name,0,0.0
+model_variant,0,0.0
+car_type,0,0.0
+transmission,0,0.0
+fuel_type,0,0.0
+year,0,0.0
+kilometers,0,0.0
+owner,0,0.0
+state,0,0.0
+accidental,0,0.0
+price,0,0.0

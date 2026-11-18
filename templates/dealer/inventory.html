@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CarCraft Inventory</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .layout {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: #0b0b0b;
+            border-right: 1px solid #202020;
+            padding: 30px 20px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 45px;
+        }
+
+        .logo span {
+            color: #287cff;
+        }
+
+        .nav-title {
+            color: #666;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 13px 15px;
+            margin-bottom: 5px;
+            color: #aaa;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #151515;
+            color: #ffffff;
+        }
+
+        .main {
+            flex: 1;
+            padding: 35px;
+            overflow-x: auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .subtitle {
+            color: #777;
+            margin-top: 8px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            border: 1px solid #292929;
+            color: #ffffff;
+            background: #111111;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .button.primary {
+            background: #287cff;
+            border-color: #287cff;
+            padding: 12px 18px;
+            font-size: 15px;
+        }
+
+        .button.delete {
+            background: #301515;
+            border-color: #522020;
+            color: #ef7777;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        input,
+        select {
+            background: #0d0d0d;
+            color: #ffffff;
+            border: 1px solid #292929;
+            border-radius: 8px;
+            padding: 12px 14px;
+            outline: none;
+        }
+
+        input {
+            min-width: 350px;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #287cff;
+        }
+
+        .table-container {
+            background: #0d0d0d;
+            border: 1px solid #202020;
+            border-radius: 14px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1050px;
+        }
+
+        th,
+        td {
+            padding: 17px 18px;
+            text-align: left;
+            border-bottom: 1px solid #1c1c1c;
+        }
+
+        th {
+            color: #777;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: #dddddd;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .vehicle-name {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .variant {
+            color: #777777;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .available {
+            background: #102d1c;
+            color: #63d99a;
+        }
+
+        .reserved {
+            background: #302710;
+            color: #e8c35a;
+        }
+
+        .sold {
+            background: #301515;
+            color: #ef7777;
+        }
+
+        .empty {
+            padding: 50px;
+            text-align: center;
+            color: #666666;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        @media (max-width: 700px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .topbar {
+                display: block;
+            }
+
+            .actions {
+                margin-top: 20px;
+            }
+
+            input {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            CAR<span>CRAFT</span>
+        </div>
+
+        <div class="nav-title">
+            Management
+        </div>
+
+        <a
+            href="{% url 'dealer:dashboard' %}"
+            class="nav-item"
+        >
+            Dashboard
+        </a>
+
+        <a
+            href="{% url 'dealer:inventory' %}"
+            class="nav-item active"
+        >
+            Inventory
+        </a>
+
+        <a href="{% url 'dealer:orders' %}" class="nav-item">
+            Orders
+        </a>
+
+        <a href="{% url 'dealer:services' %}" class="nav-item">Services</a>
+
+        <a href="{% url 'dealer:customers' %}" class="nav-item">Customers</a>
+
+        <a href="{% url 'dealer:analytics' %}" class="nav-item">Analytics</a>
+
+        <br>
+
+        <div class="nav-title">
+            System
+        </div>
+
+        <a
+            href="/admin/"
+            class="nav-item"
+        >
+            Django Admin
+        </a>
+
+        <a
+            href="http://localhost:3000/"
+            class="nav-item"
+        >
+            Back to CarCraft
+        </a>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+                <h1>
+                    Inventory
+                </h1>
+
+                <div class="subtitle">
+                    Manage vehicles in the CarCraft dealership
+                </div>
+            </div>
+
+            <div class="actions">
+
+                <a
+                    href="{% url 'dealer:add_vehicle' %}"
+                    class="button primary"
+                >
+                    + Add Vehicle
+                </a>
+
+            </div>
+
+        </div>
+
+        <form
+            method="get"
+            class="filters"
+        >
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Search brand or model..."
+            >
+
+            <select name="status">
+
+                <option value="">
+                    All Status
+                </option>
+
+                <option
+                    value="AVAILABLE"
+                    {% if status == "AVAILABLE" %}selected{% endif %}
+                >
+                    Available
+                </option>
+
+                <option
+                    value="RESERVED"
+                    {% if status == "RESERVED" %}selected{% endif %}
+                >
+                    Reserved
+                </option>
+
+                <option
+                    value="SOLD"
+                    {% if status == "SOLD" %}selected{% endif %}
+                >
+                    Sold
+                </option>
+
+            </select>
+
+            <button
+                type="submit"
+                class="button"
+            >
+                Search
+            </button>
+
+        </form>
+
+        <div class="table-container">
+
+            {% if vehicles %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Vehicle</th>
+                        <th>Year</th>
+                        <th>Body Type</th>
+                        <th>Fuel</th>
+                        <th>Transmission</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for vehicle in vehicles %}
+
+                    <tr>
+
+                        <td>
+
+                            <div class="vehicle-name">
+                                {{ vehicle.brand }} {{ vehicle.model }}
+                            </div>
+
+                            {% if vehicle.variant %}
+
+                            <div class="variant">
+                                {{ vehicle.variant }}
+                            </div>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ vehicle.year }}
+                        </td>
+
+                        <td>
+                            {{ vehicle.get_body_type_display }}
+                        </td>
+
+                        <td>
+                            {{ vehicle.get_fuel_type_display }}
+                        </td>
+
+                        <td>
+                            {{ vehicle.get_transmission_display }}
+                        </td>
+
+                        <td>
+                            ₹{{ vehicle.price }}
+                        </td>
+
+                        <td>
+
+                            {% if vehicle.status == "AVAILABLE" %}
+
+                            <span class="status available">
+                                Available
+                            </span>
+
+                            {% elif vehicle.status == "RESERVED" %}
+
+                            <span class="status reserved">
+                                Reserved
+                            </span>
+
+                            {% else %}
+
+                            <span class="status sold">
+                                Sold
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <div class="action-group">
+
+                                <a
+                                    href="{% url 'dealer:edit_vehicle' vehicle.id %}"
+                                    class="button"
+                                >
+                                    Edit
+                                </a>
+
+                                <a
+                                    href="{% url 'dealer:delete_vehicle' vehicle.id %}"
+                                    class="button delete"
+                                >
+                                    Delete
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+                No vehicles found.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
+
+
+

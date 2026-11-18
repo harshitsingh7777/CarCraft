@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% if vehicle %}
+            Edit Vehicle
+        {% else %}
+            Add Vehicle
+        {% endif %}
+        | CarCraft
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .layout {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: #0b0b0b;
+            border-right: 1px solid #202020;
+            padding: 30px 20px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 45px;
+        }
+
+        .logo span {
+            color: #287cff;
+        }
+
+        .nav-title {
+            color: #666;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 13px 15px;
+            margin-bottom: 5px;
+            color: #aaa;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #151515;
+            color: #ffffff;
+        }
+
+        .main {
+            flex: 1;
+            padding: 35px;
+            overflow-y: auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .subtitle {
+            color: #777;
+            margin-top: 8px;
+        }
+
+        .back {
+            color: #aaa;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            color: #ffffff;
+        }
+
+        .form-container {
+            max-width: 1100px;
+            background: #0d0d0d;
+            border: 1px solid #202020;
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 17px;
+            margin: 0 0 20px;
+        }
+
+        .form-section {
+            margin-bottom: 35px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            background: #080808;
+            color: #ffffff;
+            border: 1px solid #292929;
+            border-radius: 8px;
+            padding: 13px 14px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #287cff;
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+        }
+
+        .errorlist {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            color: #ff7373;
+            font-size: 12px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            padding-top: 10px;
+        }
+
+        .button {
+            display: inline-block;
+            border: 1px solid #292929;
+            background: #111111;
+            color: #ffffff;
+            padding: 13px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .button.primary {
+            background: #287cff;
+            border-color: #287cff;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 800px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            CAR<span>CRAFT</span>
+        </div>
+
+        <div class="nav-title">
+            Management
+        </div>
+
+        <a
+            href="{% url 'dealer:dashboard' %}"
+            class="nav-item"
+        >
+            Dashboard
+        </a>
+
+        <a
+            href="{% url 'dealer:inventory' %}"
+            class="nav-item active"
+        >
+            Inventory
+        </a>
+
+        <a
+            href="#"
+            class="nav-item"
+        >
+            Orders
+        </a>
+
+        <a
+            href="#"
+            class="nav-item"
+        >
+            Services
+        </a>
+
+        <a href="{% url 'dealer:customers' %}"
+            class="nav-item"
+        >Customers</a>
+
+        <a href="{% url 'dealer:analytics' %}"
+            class="nav-item"
+        >Analytics</a>
+
+        <br>
+
+        <div class="nav-title">
+            System
+        </div>
+
+        <a
+            href="/admin/"
+            class="nav-item"
+        >
+            Django Admin
+        </a>
+
+        <a
+            href="http://localhost:3000/"
+            class="nav-item"
+        >
+            Back to CarCraft
+        </a>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+                <h1>
+                    {% if vehicle %}
+                        Edit Vehicle
+                    {% else %}
+                        Add Vehicle
+                    {% endif %}
+                </h1>
+
+                <div class="subtitle">
+                    {% if vehicle %}
+                        Update vehicle information
+                    {% else %}
+                        Add a vehicle to dealership inventory
+                    {% endif %}
+                </div>
+            </div>
+
+            <a
+                href="{% url 'dealer:inventory' %}"
+                class="back"
+            >
+                ← Back to Inventory
+            </a>
+
+        </div>
+
+        <div class="form-container">
+
+            <form
+                method="post"
+                enctype="multipart/form-data"
+            >
+
+                {% csrf_token %}
+
+                <div class="form-section">
+
+                    <h2 class="section-title">
+                        Basic Information
+                    </h2>
+
+                    <div class="form-grid">
+
+                        <div class="field">
+                            {{ form.brand.label_tag }}
+                            {{ form.brand }}
+                            {{ form.brand.errors }}
+                        </div>
+
+                        <div class="field">
+                            {{ form.model.label_tag }}
+                            {{ form.model }}
+                            {{ form.model.errors }}
+                        </div>
+
+                        <div class="field">
+                            {{ form.variant.label_tag }}
+                            {{ form.variant }}
+                            {{ form.variant.errors }}
+                        </div>
+
+                        <div class="field">
+                            {{ form.year.label_tag }}
+                            {{ form.year }}
+                            {{ form.year.errors }}
+                        </div>
+
+                        <div class="field">
+                            {{ form.body_type.label_tag }}
+                            {{ form.body_type }}
+                            {{ form.body_type.errors }}
+                        </div>
+
+                        <div class="field">
+                            {{ form.color.label_tag }}
+                            {{ form.color }}
+                            {{ form.color.errors }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="form-section">
+
+                    <h2 class="section-title">
+                        Pricing & Performance
+                    </h2>
+
+                    <div class="form-grid">
+
+                        <div class="field">
+                            {{ form.price.label_tag }}
+                            {{ form.price }}
+                            {{ form.price.errors }}
+                        </div>
+
+                        <div class="field">
+                            {{ form.fuel_type.label_tag }}
+                            {{ form.fuel_type }}
+                            {{ form.fuel_type.errors }}
+                        </div>
+
+                        <div class="field">
+                            {{ form.transmission.label_tag }}
+                            {{ form.transmission }}
+                            {{ form.transmission.errors }}
+                        </div>
+
+                        <div class="field">
+                            {{ form.mileage.label_tag }}
+                            {{ form.mileage }}
+                            {{ form.mileage.errors }}
+                        </div>
+
+                        <div class="field">
+                            {{ form.engine.label_tag }}
+                            {{ form.engine }}
+                            {{ form.engine.errors }}
+                        </div>
+
+                        <div class="field">
+                            {{ form.horsepower.label_tag }}
+                            {{ form.horsepower }}
+                            {{ form.horsepower.errors }}
+                        </div>
+
+                        <div class="field">
+                            {{ form.torque.label_tag }}
+                            {{ form.torque }}
+                            {{ form.torque.errors }}
+                        </div>
+
+                        <div class="field">
+                            {{ form.seating_capacity.label_tag }}
+                            {{ form.seating_capacity }}
+                            {{ form.seating_capacity.errors }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="form-section">
+
+                    <h2 class="section-title">
+                        Inventory
+                    </h2>
+
+                    <div class="form-grid">
+
+                        <div class="field">
+                            {{ form.stock_quantity.label_tag }}
+                            {{ form.stock_quantity }}
+                            {{ form.stock_quantity.errors }}
+                        </div>
+
+                        <div class="field">
+                            {{ form.status.label_tag }}
+                            {{ form.status }}
+                            {{ form.status.errors }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="form-section">
+
+                    <h2 class="section-title">
+                        Media & Description
+                    </h2>
+
+                    <div class="form-grid">
+
+                        <div class="field">
+                            {{ form.image.label_tag }}
+                            {{ form.image }}
+                            {{ form.image.errors }}
+                        </div>
+
+                        <div class="field">
+                            {{ form.model_3d.label_tag }}
+                            {{ form.model_3d }}
+                            {{ form.model_3d.errors }}
+                        </div>
+
+                        <div class="field full">
+                            {{ form.description.label_tag }}
+                            {{ form.description }}
+                            {{ form.description.errors }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="button primary"
+                    >
+                        {% if vehicle %}
+                            Save Changes
+                        {% else %}
+                            Add Vehicle
+                        {% endif %}
+                    </button>
+
+                    <a
+                        href="{% url 'dealer:inventory' %}"
+                        class="button"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Orders | CarCraft Dealer</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .layout {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: #0b0b0b;
+            border-right: 1px solid #202020;
+            padding: 30px 20px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 45px;
+        }
+
+        .logo span {
+            color: #287cff;
+        }
+
+        .nav-title {
+            color: #666;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 13px 15px;
+            margin-bottom: 5px;
+            color: #aaa;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #151515;
+            color: #ffffff;
+        }
+
+        .main {
+            flex: 1;
+            padding: 35px;
+            overflow-x: auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .subtitle {
+            color: #777;
+            margin-top: 8px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        select {
+            background: #0d0d0d;
+            color: #ffffff;
+            border: 1px solid #292929;
+            border-radius: 8px;
+            padding: 11px 14px;
+            outline: none;
+        }
+
+        select:focus {
+            border-color: #287cff;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            border: 1px solid #292929;
+            color: #ffffff;
+            background: #111111;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .button.primary {
+            background: #287cff;
+            border-color: #287cff;
+        }
+
+        .table-container {
+            background: #0d0d0d;
+            border: 1px solid #202020;
+            border-radius: 14px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th,
+        td {
+            padding: 17px 18px;
+            text-align: left;
+            border-bottom: 1px solid #1c1c1c;
+        }
+
+        th {
+            color: #777;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: #dddddd;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .customer {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .email {
+            color: #777;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .pending {
+            background: #302710;
+            color: #e8c35a;
+        }
+
+        .confirmed {
+            background: #102d1c;
+            color: #63d99a;
+        }
+
+        .processing {
+            background: #10253a;
+            color: #63a9e8;
+        }
+
+        .shipped {
+            background: #17233a;
+            color: #7fa8ff;
+        }
+
+        .delivered {
+            background: #102d1c;
+            color: #63d99a;
+        }
+
+        .cancelled {
+            background: #301515;
+            color: #ef7777;
+        }
+
+        .empty {
+            padding: 60px;
+            text-align: center;
+            color: #666;
+        }
+
+        @media (max-width: 700px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .filters {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            CAR<span>CRAFT</span>
+        </div>
+
+        <div class="nav-title">
+            Management
+        </div>
+
+        <a
+            href="{% url 'dealer:dashboard' %}"
+            class="nav-item"
+        >
+            Dashboard
+        </a>
+
+        <a
+            href="{% url 'dealer:inventory' %}"
+            class="nav-item"
+        >
+            Inventory
+        </a>
+
+        <a
+            href="{% url 'dealer:orders' %}"
+            class="nav-item active"
+        >
+            Orders
+        </a>
+
+        <a href="{% url 'dealer:services' %}" class="nav-item">Services</a>
+
+        <a href="{% url 'dealer:customers' %}" class="nav-item">Customers</a>
+
+        <a href="{% url 'dealer:analytics' %}" class="nav-item">Analytics</a>
+
+        <br>
+
+        <div class="nav-title">
+            System
+        </div>
+
+        <a
+            href="/admin/"
+            class="nav-item"
+        >
+            Django Admin
+        </a>
+
+        <a
+            href="http://localhost:3000/"
+            class="nav-item"
+        >
+            Back to CarCraft
+        </a>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>
+                    Orders
+                </h1>
+
+                <div class="subtitle">
+                    Manage customer orders
+                </div>
+
+            </div>
+
+        </div>
+
+        <form
+            method="get"
+            class="filters"
+        >
+
+            <select name="status">
+
+                <option value="">
+                    All Orders
+                </option>
+
+                {% for value, label in status_choices %}
+
+                <option
+                    value="{{ value }}"
+                    {% if status == value %}selected{% endif %}
+                >
+                    {{ label }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+            <button
+                type="submit"
+                class="button primary"
+            >
+                Filter
+            </button>
+
+            {% if status %}
+
+            <a
+                href="{% url 'dealer:orders' %}"
+                class="button"
+            >
+                Clear
+            </a>
+
+            {% endif %}
+
+        </form>
+
+        <div class="table-container">
+
+            {% if orders %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for order in orders %}
+
+                    <tr>
+
+                        <td>
+                            #{{ order.id }}
+                        </td>
+
+                        <td>
+
+                            <div class="customer">
+                                {{ order.user.username }}
+                            </div>
+
+                            <div class="email">
+                                {{ order.user.email }}
+                            </div>
+
+                        </td>
+
+                        <td>
+                            {{ order.created_at|date:"d M Y, h:i A" }}
+                        </td>
+
+                        <td>
+                            ₹{{ order.total_amount }}
+                        </td>
+
+                        <td>
+
+                            <span class="status {{ order.status|lower }}">
+                                {{ order.get_status_display }}
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="{% url 'dealer:order_detail' order.id %}"
+                                class="button"
+                            >
+                                View
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+                No orders found.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
+
+
+

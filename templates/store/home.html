@@ -1,0 +1,279 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}CarCraft Store{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/carcraft-store.css' %}">
+
+<div class="carcraft-store">
+
+    <!-- NAVIGATION -->
+    <nav class="cc-navbar">
+
+        <a href="http://localhost:3000/" class="cc-brand">
+            CAR<span>CRAFT</span>
+        </a>
+
+        <div class="cc-nav-right">
+
+            <a
+                href="http://localhost:3000/"
+                class="cc-nav-link"
+            >
+                Home
+            </a>
+
+            <a
+                href="{% url 'cart' %}"
+                class="cc-nav-link"
+            >
+                Cart
+            </a>
+
+            {% if user.is_authenticated %}
+
+                <span class="cc-nav-link">
+                    {{ user.username }}
+                </span>
+
+            {% else %}
+
+                <a
+                    href="/accounts/login/"
+                    class="cc-nav-link"
+                >
+                    Login
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+
+    <main class="cc-container">
+
+        <!-- HERO -->
+        <section class="cc-store-hero">
+
+            <div class="cc-eyebrow">
+                CARCRAFT / COMPONENTS
+            </div>
+
+            <h1 class="cc-store-title">
+                Parts &<br>
+                Accessories.
+            </h1>
+
+            <p class="cc-store-description">
+                Explore the components and details that define
+                the machine. Genuine parts, performance components
+                and carefully selected accessories.
+            </p>
+
+        </section>
+
+
+        <!-- FILTER -->
+        <section class="cc-toolbar">
+
+            <form
+                method="get"
+                class="cc-search-form"
+            >
+
+                <input
+                    type="text"
+                    name="search"
+                    class="cc-input"
+                    placeholder="Search components..."
+                    value="{{ search }}"
+                >
+
+                <button
+                    type="submit"
+                    class="cc-button cc-button-primary"
+                >
+                    Search
+                </button>
+
+            </form>
+
+
+            <form
+                method="get"
+                class="cc-filter"
+            >
+
+                {% if search %}
+
+                    <input
+                        type="hidden"
+                        name="search"
+                        value="{{ search }}"
+                    >
+
+                {% endif %}
+
+                <select
+                    name="category"
+                    class="cc-select"
+                    onchange="this.form.submit()"
+                >
+
+                    <option value="">
+                        ALL CATEGORIES
+                    </option>
+
+                    {% for category in categories %}
+
+                        <option
+                            value="{{ category.id }}"
+                            {% if selected_category == category.id|stringformat:"s" %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ category.name|upper }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </form>
+
+        </section>
+
+
+        <!-- PRODUCTS -->
+        <section class="cc-products">
+
+            {% if products %}
+
+                <div class="cc-product-grid">
+
+                    {% for product in products %}
+
+                        <article class="cc-product-card">
+
+                            <a
+                                href="{% url 'product_detail' product.id %}"
+                            >
+
+                                <div class="cc-product-image">
+
+                                    {% if product.image %}
+
+                                        <img
+                                            src="{{ product.image.url }}"
+                                            alt="{{ product.name }}"
+                                        >
+
+                                    {% else %}
+
+                                        <div class="cc-image-placeholder">
+                                            CARCRAFT COMPONENT
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </a>
+
+
+                            <div class="cc-product-content">
+
+                                <div class="cc-product-category">
+                                    {{ product.category.name }}
+                                </div>
+
+                                <h2 class="cc-product-name">
+                                    {{ product.name }}
+                                </h2>
+
+                                <p class="cc-product-description">
+                                    {{ product.description|truncatewords:16 }}
+                                </p>
+
+
+                                <div class="cc-product-bottom">
+
+                                    <div>
+
+                                        <div class="cc-product-price">
+                                            ₹{{ product.price }}
+                                        </div>
+
+                                        {% if product.stock_quantity > 0 %}
+
+                                            <div class="cc-product-stock cc-stock-good">
+                                                {{ product.stock_quantity }} AVAILABLE
+                                            </div>
+
+                                        {% else %}
+
+                                            <div class="cc-product-stock cc-stock-none">
+                                                OUT OF STOCK
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <a
+                                        href="{% url 'product_detail' product.id %}"
+                                        class="cc-button cc-button-outline"
+                                    >
+                                        Explore
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="cc-empty">
+
+                    <div class="cc-empty-number">
+                        00 / NO RESULTS
+                    </div>
+
+                    <h2>
+                        Nothing found.
+                    </h2>
+
+                    <p>
+                        No components match your current search
+                        or category selection.
+                    </p>
+
+                    <a
+                        href="{% url 'store_home' %}"
+                        class="cc-button cc-button-outline"
+                    >
+                        View All Products
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</div>
+
+{% endblock %}

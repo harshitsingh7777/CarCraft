@@ -1,0 +1,165 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}My Orders | CarCraft{% endblock %}
+
+{% block content %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/carcraft-store.css' %}"
+>
+
+<div class="carcraft-store">
+
+    <nav class="cc-navbar">
+
+        <a
+            href="http://localhost:3000/"
+            class="cc-brand"
+        >
+            CAR<span>CRAFT</span>
+        </a>
+
+        <div class="cc-nav-right">
+
+            <a
+                href="{% url 'store_home' %}"
+                class="cc-nav-link"
+            >
+                Store
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="cc-container cc-cart">
+
+        <div class="cc-eyebrow">
+            CARCRAFT / ORDERS
+        </div>
+
+        <h1 class="cc-store-title">
+            My Orders.
+        </h1>
+
+
+        {% if orders %}
+
+            <div style="margin-top: 55px;">
+
+                {% for order in orders %}
+
+                    <div
+                        style="
+                            padding: 25px 0;
+                            border-bottom: 1px solid rgba(255,255,255,.1);
+                        "
+                    >
+
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: space-between;
+                                gap: 20px;
+                                align-items: center;
+                                flex-wrap: wrap;
+                            "
+                        >
+
+                            <div>
+
+                                <div class="cc-product-category">
+                                    ORDER #{{ order.id }}
+                                </div>
+
+                                <h2
+                                    style="
+                                        margin: 8px 0;
+                                        font-size: 22px;
+                                    "
+                                >
+                                    ₹{{ order.total_amount|floatformat:2 }}
+                                </h2>
+
+                                <div
+                                    style="
+                                        color: #85858b;
+                                        font-size: 12px;
+                                    "
+                                >
+                                    {{ order.created_at|date:"d M Y, H:i" }}
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 20px;
+                                "
+                            >
+
+                                <span
+                                    class="cc-meta-value"
+                                >
+                                    {{ order.get_status_display }}
+                                </span>
+
+                                <a
+                                    href="{% url 'orders:order_detail' order.id %}"
+                                    class="cc-button cc-button-outline"
+                                >
+                                    View Order
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div
+                class="cc-empty"
+                style="margin-top: 55px;"
+            >
+
+                <div class="cc-empty-number">
+                    00 / NO ORDERS
+                </div>
+
+                <h2>
+                    No orders yet.
+                </h2>
+
+                <p>
+                    Your purchased CarCraft components will
+                    appear here.
+                </p>
+
+                <a
+                    href="{% url 'store_home' %}"
+                    class="cc-button cc-button-primary"
+                >
+                    Explore Store
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+{% endblock %}

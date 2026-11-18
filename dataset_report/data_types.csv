@@ -1,0 +1,13 @@
+column,data_type,unique_values
+brand,str,18
+model_name,str,84
+model_variant,str,82
+car_type,str,5
+transmission,str,2
+fuel_type,str,5
+year,int64,24
+kilometers,int64,95860
+owner,str,3
+state,str,27
+accidental,str,2
+price,int64,17745

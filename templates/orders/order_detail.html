@@ -1,0 +1,193 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Order #{{ order.id }} | CarCraft{% endblock %}
+
+{% block content %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/carcraft-store.css' %}"
+>
+
+<div class="carcraft-store">
+
+    <nav class="cc-navbar">
+
+        <a
+            href="http://localhost:3000/"
+            class="cc-brand"
+        >
+            CAR<span>CRAFT</span>
+        </a>
+
+        <div class="cc-nav-right">
+
+            <a
+                href="{% url 'store_home' %}"
+                class="cc-nav-link"
+            >
+                Store
+            </a>
+
+            <a
+                href="{% url 'orders:my_orders' %}"
+                class="cc-nav-link"
+            >
+                My Orders
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="cc-container cc-detail">
+
+        <a
+            href="{% url 'orders:my_orders' %}"
+            class="cc-back"
+        >
+            ← Back to Orders
+        </a>
+
+
+        <div class="cc-eyebrow">
+            CARCRAFT / ORDER #{{ order.id }}
+        </div>
+
+
+        <h1 class="cc-store-title">
+            Order Details.
+        </h1>
+
+
+        <div
+            style="
+                margin: 50px 0;
+                padding: 25px 0;
+                border-top: 1px solid rgba(255,255,255,.1);
+                border-bottom: 1px solid rgba(255,255,255,.1);
+            "
+        >
+
+            <div class="cc-summary-line">
+
+                <span>
+                    Status
+                </span>
+
+                <strong>
+                    {{ order.get_status_display }}
+                </strong>
+
+            </div>
+
+
+            <div class="cc-summary-line">
+
+                <span>
+                    Date
+                </span>
+
+                <span>
+                    {{ order.created_at|date:"d M Y, H:i" }}
+                </span>
+
+            </div>
+
+
+            <div class="cc-summary-line">
+
+                <span>
+                    Shipping Address
+                </span>
+
+                <span
+                    style="
+                        max-width: 400px;
+                        text-align: right;
+                    "
+                >
+                    {{ order.shipping_address }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <div class="cc-eyebrow">
+                ITEMS
+            </div>
+
+
+            {% for item in order.items.all %}
+
+                <div class="cc-cart-item">
+
+                    {% if item.product.image %}
+
+                        <img
+                            src="{{ item.product.image.url }}"
+                            alt="{{ item.product.name }}"
+                            class="cc-cart-image"
+                        >
+
+                    {% else %}
+
+                        <div class="cc-cart-image"></div>
+
+                    {% endif %}
+
+
+                    <div>
+
+                        <h2 class="cc-cart-name">
+                            {{ item.product.name }}
+                        </h2>
+
+                        <div class="cc-cart-category">
+                            {{ item.product.category.name }}
+                        </div>
+
+                        <div class="cc-cart-price">
+                            ₹{{ item.price|floatformat:2 }}
+                            × {{ item.quantity }}
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        ₹{% widthratio item.price 1 item.quantity %}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+
+            <div class="cc-summary-total">
+
+                <span>
+                    Order Total
+                </span>
+
+                <span>
+                    ₹{{ order.total_amount|floatformat:2 }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+{% endblock %}

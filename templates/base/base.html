@@ -1,0 +1,625 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+            CarCraft
+        {% endblock %}
+    </title>
+
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <style>
+
+        /* =====================================================
+           CARCRAFT GLOBAL THEME
+        ===================================================== */
+
+        :root {
+            --cc-bg: #050505;
+            --cc-bg-soft: #0a0c0f;
+            --cc-panel: #0d0f12;
+            --cc-white: #f5f7fa;
+            --cc-muted: #858d97;
+            --cc-border: rgba(255, 255, 255, 0.10);
+            --cc-border-hover: rgba(255, 255, 255, 0.22);
+            --cc-blue: #287cff;
+            --cc-blue-light: #4590ff;
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+            margin: 0;
+            padding: 0;
+
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at 80% 0%,
+                    rgba(40, 124, 255, 0.055),
+                    transparent 28%
+                ),
+                var(--cc-bg);
+
+            color: var(--cc-white);
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+
+        button,
+        input,
+        select,
+        textarea {
+            font-family: inherit;
+        }
+
+
+        /* =====================================================
+           CARCRAFT TOP BAR
+        ===================================================== */
+
+        .carcraft-navbar {
+            position: relative;
+
+            z-index: 1000;
+
+            width: 100%;
+
+            height: 76px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 42px;
+
+            background:
+                rgba(5, 5, 5, 0.82);
+
+            border-bottom:
+                1px solid rgba(255, 255, 255, 0.08);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+
+        /* =====================================================
+           BRAND
+        ===================================================== */
+
+        .carcraft-navbar-brand {
+            display: inline-flex;
+            align-items: center;
+
+            padding: 0;
+
+            border: 0;
+
+            background: transparent;
+
+            color: #ffffff;
+
+            font-size: 20px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.24em;
+
+            line-height: 1;
+
+            cursor: pointer;
+
+            transition:
+                opacity 0.25s ease;
+        }
+
+
+        .carcraft-navbar-brand:hover {
+            opacity: 0.78;
+        }
+
+
+        /* =====================================================
+           RIGHT ACTIONS
+        ===================================================== */
+
+        .carcraft-navbar-actions {
+            display: flex;
+            align-items: center;
+
+            gap: 30px;
+        }
+
+
+        .carcraft-navbar-link,
+        .carcraft-navbar-search {
+            display: inline-flex;
+            align-items: center;
+
+            min-height: 40px;
+
+            padding: 0;
+
+            border: 0;
+
+            background: transparent;
+
+            color: rgba(255, 255, 255, 0.88);
+
+            font-size: 13px;
+
+            font-weight: 500;
+
+            white-space: nowrap;
+
+            cursor: pointer;
+
+            transition:
+                color 0.25s ease,
+                opacity 0.25s ease;
+        }
+
+
+        .carcraft-navbar-link:hover,
+        .carcraft-navbar-search:hover {
+            color: #ffffff;
+        }
+
+
+        /* =====================================================
+           SEARCH
+        ===================================================== */
+
+        .carcraft-navbar-search {
+            gap: 8px;
+        }
+
+
+        .carcraft-search-icon {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            width: 16px;
+            height: 16px;
+
+            font-size: 17px;
+
+            line-height: 1;
+        }
+
+
+        /* =====================================================
+           SIGN UP
+        ===================================================== */
+
+        .carcraft-navbar-signup {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 44px;
+
+            padding: 0 23px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.30);
+
+            border-radius: 999px;
+
+            background: transparent;
+
+            color: #ffffff;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                background 0.25s ease,
+                border-color 0.25s ease,
+                transform 0.25s ease;
+        }
+
+
+        .carcraft-navbar-signup:hover {
+            background: rgba(255, 255, 255, 0.08);
+
+            border-color:
+                rgba(255, 255, 255, 0.55);
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =====================================================
+           LOGOUT
+        ===================================================== */
+
+        .carcraft-navbar-logout {
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+
+        .carcraft-navbar-logout:hover {
+            color: #ffffff;
+        }
+
+
+        /* =====================================================
+           PAGE WRAPPER
+        ===================================================== */
+
+        .carcraft-main {
+            min-height: calc(100vh - 76px);
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .carcraft-footer {
+            position: relative;
+
+            padding: 55px 42px 42px;
+
+            background: #030405;
+
+            border-top:
+                1px solid rgba(255, 255, 255, 0.07);
+        }
+
+
+        .carcraft-footer-inner {
+            width: min(1400px, 100%);
+
+            margin: 0 auto;
+
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+
+            gap: 30px;
+        }
+
+
+        .carcraft-footer-brand {
+            color: #ffffff;
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.20em;
+        }
+
+
+        .carcraft-footer-description {
+            margin-top: 9px;
+
+            color: #68717d;
+
+            font-size: 12px;
+        }
+
+
+        .carcraft-footer-copy {
+            color: #59616b;
+
+            font-size: 11px;
+
+            text-align: right;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE NAVBAR
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .carcraft-navbar {
+                height: auto;
+
+                min-height: 70px;
+
+                padding:
+                    15px 22px;
+
+                gap: 20px;
+            }
+
+
+            .carcraft-navbar-brand {
+                font-size: 17px;
+            }
+
+
+            .carcraft-navbar-actions {
+                gap: 17px;
+            }
+
+
+            .carcraft-navbar-link,
+            .carcraft-navbar-search {
+                font-size: 12px;
+            }
+
+
+            .carcraft-navbar-signup {
+                min-height: 39px;
+
+                padding:
+                    0 17px;
+            }
+        }
+
+
+        @media (max-width: 650px) {
+
+            .carcraft-navbar {
+                padding:
+                    14px 18px;
+            }
+
+
+            .carcraft-navbar-brand {
+                font-size: 15px;
+
+                letter-spacing: 0.18em;
+            }
+
+
+            .carcraft-navbar-actions {
+                gap: 12px;
+            }
+
+
+            .carcraft-navbar-search {
+                display: none;
+            }
+
+
+            .carcraft-navbar-signup {
+                padding:
+                    0 15px;
+            }
+
+
+            .carcraft-footer {
+                padding:
+                    40px 22px 30px;
+            }
+
+
+            .carcraft-footer-inner {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+
+            .carcraft-footer-copy {
+                text-align: left;
+            }
+        }
+
+    </style>
+
+
+    {% block extra_css %}
+    {% endblock %}
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         CARCRAFT NAVBAR
+    ===================================================== -->
+
+    <header class="carcraft-navbar">
+
+
+        <!-- BRAND -->
+
+        <button
+            type="button"
+            class="carcraft-navbar-brand"
+            onclick="window.location.href='http://localhost:3000/'"
+            aria-label="CarCraft Home"
+        >
+            CARCRAFT
+        </button>
+
+
+        <!-- ACTIONS -->
+
+        <nav
+            class="carcraft-navbar-actions"
+            aria-label="Main navigation"
+        >
+
+
+            <!-- SEARCH -->
+
+            <a
+                href="/vehicles/"
+                class="carcraft-navbar-search"
+            >
+
+                <span
+                    class="carcraft-search-icon"
+                    aria-hidden="true"
+                >
+                    ⌕
+                </span>
+
+                Search
+
+            </a>
+
+
+            {% if user.is_authenticated %}
+
+                <!-- ACCOUNT -->
+
+                <a
+                    href="/orders/"
+                    class="carcraft-navbar-link"
+                >
+                    Account
+                </a>
+
+
+                <!-- LOGOUT -->
+
+                <a
+                    href="{% url 'services:my_bookings' %}"
+                    class="carcraft-navbar-link"
+                >
+                    My Bookings
+                </a>
+
+
+                <a
+                    href="/accounts/logout/"
+                    class="carcraft-navbar-link carcraft-navbar-logout"
+                >
+                    Logout
+                </a>
+
+            {% else %}
+
+                <!-- LOGIN -->
+
+                <a
+                    href="/accounts/login/"
+                    class="carcraft-navbar-link"
+                >
+                    Login
+                </a>
+
+
+                <!-- SIGN UP -->
+
+                <a
+                    href="/accounts/register/"
+                    class="carcraft-navbar-signup"
+                >
+                    Sign Up
+                </a>
+
+            {% endif %}
+
+        </nav>
+
+    </header>
+
+
+    <!-- =====================================================
+         PAGE CONTENT
+    ===================================================== -->
+
+    <main class="carcraft-main">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+    ===================================================== -->
+
+    <footer class="carcraft-footer">
+
+        <div class="carcraft-footer-inner">
+
+
+            <div>
+
+                <div class="carcraft-footer-brand">
+                    CARCRAFT
+                </div>
+
+                <div class="carcraft-footer-description">
+                    Performance. Design. Technology.
+                </div>
+
+            </div>
+
+
+            <div class="carcraft-footer-copy">
+                © 2026 CarCraft. All rights reserved.
+            </div>
+
+
+        </div>
+
+    </footer>
+
+
+    <!-- Bootstrap JS -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    ></script>
+
+
+    {% block extra_js %}
+    {% endblock %}
+
+
+</body>
+
+</html>

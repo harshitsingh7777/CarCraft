@@ -1,0 +1,66 @@
+{% extends "base/base.html" %}
+
+{% block title %}Enquiry Submitted{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7">
+
+            <div class="card shadow-sm border-0 text-center">
+
+                <div class="card-body p-5">
+
+                    <div class="mb-4">
+                        <div
+                            class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center"
+                            style="width: 70px; height: 70px; font-size: 32px;"
+                        >
+                            ✓
+                        </div>
+                    </div>
+
+                    <h1 class="fw-bold mb-3">
+                        Enquiry Submitted
+                    </h1>
+
+                    <p class="text-muted mb-4">
+                        Thank you for your enquiry about
+                        <strong>
+                            {{ vehicle.brand }} {{ vehicle.model }}
+                        </strong>.
+                        Our team will contact you shortly.
+                    </p>
+
+                    <div class="d-grid gap-2">
+
+                        <a
+                            href="{% url 'vehicle_detail' vehicle.id %}"
+                            class="btn btn-primary btn-lg"
+                        >
+                            Back to Vehicle
+                        </a>
+
+                        <a
+                            href="{% url 'vehicle_list' %}"
+                            class="btn btn-outline-dark"
+                        >
+                            Browse Other Vehicles
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

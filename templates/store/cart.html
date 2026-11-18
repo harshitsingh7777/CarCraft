@@ -1,0 +1,235 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Cart | CarCraft{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/carcraft-store.css' %}">
+
+<div class="carcraft-store">
+
+    <!-- NAVIGATION -->
+    <nav class="cc-navbar">
+
+        <a href="http://localhost:3000/" class="cc-brand">
+            CAR<span>CRAFT</span>
+        </a>
+
+        <div class="cc-nav-right">
+
+            <a
+                href="{% url 'store_home' %}"
+                class="cc-nav-link"
+            >
+                Store
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="cc-container cc-cart">
+
+        <div class="cc-eyebrow">
+            CARCRAFT / YOUR SELECTION
+        </div>
+
+
+        <h1 class="cc-store-title">
+            Your Cart.
+        </h1>
+
+
+        {% if items %}
+
+            <div class="cc-cart-grid">
+
+                <!-- CART ITEMS -->
+                <div>
+
+                    {% for item in items %}
+
+                        <div class="cc-cart-item">
+
+                            <!-- IMAGE -->
+                            {% if item.product.image %}
+
+                                <img
+                                    src="{{ item.product.image.url }}"
+                                    alt="{{ item.product.name }}"
+                                    class="cc-cart-image"
+                                >
+
+                            {% else %}
+
+                                <div class="cc-cart-image"></div>
+
+                            {% endif %}
+
+
+                            <!-- PRODUCT INFO -->
+                            <div>
+
+                                <h2 class="cc-cart-name">
+                                    {{ item.product.name }}
+                                </h2>
+
+                                <div class="cc-cart-category">
+                                    {{ item.product.category.name }}
+                                </div>
+
+                                <div class="cc-cart-price">
+                                    ₹{{ item.product.price }} each
+                                </div>
+
+                            </div>
+
+
+                            <!-- ACTIONS -->
+                            <div class="cc-cart-actions">
+
+                                <!-- UPDATE -->
+                                <form
+                                    method="post"
+                                    action="{% url 'update_cart' item.id %}"
+                                    style="display: flex; gap: 8px;"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <input
+                                        type="number"
+                                        name="quantity"
+                                        value="{{ item.quantity }}"
+                                        min="1"
+                                        max="{{ item.product.stock_quantity }}"
+                                        required
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="cc-button cc-button-outline"
+                                    >
+                                        Update
+                                    </button>
+
+                                </form>
+
+
+                                <!-- REMOVE -->
+                                <form
+                                    method="post"
+                                    action="{% url 'remove_from_cart' item.id %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="cc-button cc-button-outline"
+                                    >
+                                        Remove
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- ORDER SUMMARY -->
+                <aside class="cc-summary">
+
+                    <h2 class="cc-summary-title">
+                        Order Summary
+                    </h2>
+
+
+                    <div class="cc-summary-line">
+
+                        <span>
+                            Items
+                        </span>
+
+                        <span>
+                            {{ items|length }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="cc-summary-total">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <span>
+                            ₹{{ total }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- CHECKOUT -->
+                    <a
+                        href="{% url 'orders:checkout' %}"
+                        class="cc-button cc-button-primary"
+                    >
+                        Proceed to Checkout
+                    </a>
+
+
+                    <!-- CONTINUE SHOPPING -->
+                    <a
+                        href="{% url 'store_home' %}"
+                        class="cc-button cc-button-outline"
+                    >
+                        Continue Shopping
+                    </a>
+
+                </aside>
+
+            </div>
+
+        {% else %}
+
+            <!-- EMPTY CART -->
+            <div class="cc-empty">
+
+                <div class="cc-empty-number">
+                    00 / EMPTY
+                </div>
+
+                <h2>
+                    Your cart is empty.
+                </h2>
+
+                <p>
+                    Explore the CarCraft collection and select
+                    the components you need.
+                </p>
+
+                <a
+                    href="{% url 'store_home' %}"
+                    class="cc-button cc-button-primary"
+                >
+                    Explore Store
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+{% endblock %}

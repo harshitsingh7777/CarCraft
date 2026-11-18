@@ -1,0 +1,1523 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+    Vehicles | CarCraft
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    /* =========================================================
+       VEHICLES PAGE
+    ========================================================= */
+
+    .vehicles-page {
+        position: relative;
+        min-height: calc(100vh - 76px);
+        overflow: hidden;
+        background:
+            radial-gradient(
+                circle at 78% 8%,
+                rgba(40, 124, 255, 0.12),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 12% 75%,
+                rgba(255, 255, 255, 0.025),
+                transparent 30%
+            ),
+            #050505;
+        color: #f5f7fa;
+        padding: 0 0 120px;
+    }
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+
+    .vehicles-hero {
+        position: relative;
+        min-height: 430px;
+        display: flex;
+        align-items: center;
+        padding: 90px 0 70px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0.018),
+                transparent
+            );
+    }
+
+    .vehicles-hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 8%;
+        width: 420px;
+        height: 420px;
+        border-radius: 50%;
+        background: rgba(40, 124, 255, 0.055);
+        filter: blur(80px);
+        pointer-events: none;
+    }
+
+    .vehicles-container {
+        width: min(
+            1400px,
+            calc(100% - 48px)
+        );
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+
+    .vehicles-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 22px;
+        color: #287cff;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+    }
+
+    .vehicles-eyebrow::before {
+        content: "";
+        width: 42px;
+        height: 1px;
+        background: #287cff;
+    }
+
+    .vehicles-title {
+        margin: 0;
+        max-width: 1000px;
+        color: #ffffff;
+        font-size: clamp(
+            58px,
+            8vw,
+            112px
+        );
+        line-height: 0.88;
+        font-weight: 700;
+        letter-spacing: -0.065em;
+    }
+
+    .vehicles-description {
+        max-width: 610px;
+        margin: 28px 0 0;
+        color: #858d97;
+        font-size: 15px;
+        line-height: 1.75;
+    }
+
+    /* =========================================================
+       HERO META
+    ========================================================= */
+
+    .vehicles-hero-meta {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        margin-top: 38px;
+    }
+
+    .vehicles-meta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .vehicles-meta-number {
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .vehicles-meta-label {
+        color: #636b75;
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+
+    .vehicles-meta-divider {
+        width: 1px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.13);
+    }
+
+    /* =========================================================
+       FILTER AREA
+    ========================================================= */
+
+    .vehicles-content {
+        position: relative;
+        padding-top: 42px;
+    }
+
+    .vehicle-filter {
+        position: relative;
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.035);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow:
+            0 25px 80px rgba(0, 0, 0, 0.38);
+    }
+
+    .vehicle-filter::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        background:
+            linear-gradient(
+                120deg,
+                rgba(255, 255, 255, 0.035),
+                transparent 40%
+            );
+    }
+
+    .vehicle-filter form {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns:
+            minmax(260px, 2fr)
+            1fr
+            1fr
+            64px;
+        gap: 10px;
+        margin: 0;
+    }
+
+    .vehicle-input,
+    .vehicle-select {
+        width: 100%;
+        height: 52px;
+        padding: 0 16px;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: 9px;
+        outline: none;
+        background: rgba(255, 255, 255, 0.045);
+        color: #ffffff;
+        font-size: 13px;
+        transition:
+            border-color 0.25s ease,
+            background 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+
+    .vehicle-input::placeholder {
+        color: #6e7680;
+    }
+
+    .vehicle-input:focus,
+    .vehicle-select:focus {
+        border-color: rgba(40, 124, 255, 0.75);
+        background: rgba(40, 124, 255, 0.055);
+        box-shadow:
+            0 0 0 3px
+            rgba(40, 124, 255, 0.08);
+    }
+
+    .vehicle-select {
+        cursor: pointer;
+    }
+
+    .vehicle-select option {
+        background: #101214;
+        color: #ffffff;
+    }
+
+    .vehicle-search-button {
+        width: 64px;
+        height: 52px;
+        border: 0;
+        border-radius: 9px;
+        background: #287cff;
+        color: #ffffff;
+        cursor: pointer;
+        font-size: 18px;
+        transition:
+            transform 0.25s ease,
+            background 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+
+    .vehicle-search-button:hover {
+        background: #4590ff;
+        transform: translateY(-2px);
+        box-shadow:
+            0 12px 30px
+            rgba(40, 124, 255, 0.25);
+    }
+
+    /* =========================================================
+       RESULTS HEADER
+    ========================================================= */
+
+    .vehicles-results-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+        margin:
+            52px 0 22px;
+    }
+
+    .vehicles-results-title {
+        margin: 0;
+        color: #ffffff;
+        font-size: 22px;
+        font-weight: 650;
+        letter-spacing: -0.025em;
+    }
+
+    .vehicles-results-subtitle {
+        margin-top: 7px;
+        color: #666e78;
+        font-size: 12px;
+    }
+
+    .vehicles-results-line {
+        flex: 1;
+        max-width: 400px;
+        height: 1px;
+        margin-bottom: 5px;
+        background:
+            linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.12),
+                transparent
+            );
+    }
+
+    /* =========================================================
+       VEHICLE GRID
+    ========================================================= */
+
+    .vehicles-grid {
+        display: grid;
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+        gap: 22px;
+    }
+
+    /* =========================================================
+       VEHICLE CARD
+    ========================================================= */
+
+    .vehicle-card {
+        position: relative;
+        min-width: 0;
+        overflow: hidden;
+        border:
+            1px solid rgba(255, 255, 255, 0.085);
+        border-radius: 17px;
+        background: #0b0d0f;
+        transition:
+            transform 0.35s ease,
+            border-color 0.35s ease,
+            box-shadow 0.35s ease;
+    }
+
+    .vehicle-card:hover {
+        transform:
+            translateY(-7px);
+        border-color:
+            rgba(40, 124, 255, 0.42);
+        box-shadow:
+            0 30px 75px
+            rgba(0, 0, 0, 0.55),
+            0 0 35px
+            rgba(40, 124, 255, 0.055);
+    }
+
+    /* =========================================================
+       IMAGE
+    ========================================================= */
+
+    .vehicle-image {
+        position: relative;
+        height: 280px;
+        overflow: hidden;
+        background:
+            linear-gradient(
+                135deg,
+                #111416,
+                #070809
+            );
+    }
+
+    .vehicle-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+            linear-gradient(
+                to bottom,
+                transparent 40%,
+                rgba(5, 5, 5, 0.65)
+            );
+    }
+
+    .vehicle-image img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transition:
+            transform 0.7s ease;
+    }
+
+    .vehicle-card:hover
+    .vehicle-image img {
+        transform:
+            scale(1.045);
+    }
+
+    .vehicle-no-image {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        color: #737b85;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    /* =========================================================
+       CARD CONTENT
+    ========================================================= */
+
+    .vehicle-content {
+        padding: 25px;
+    }
+
+    .vehicle-number {
+        margin-bottom: 11px;
+        color: #287cff;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.19em;
+        text-transform: uppercase;
+    }
+
+    .vehicle-name {
+        margin: 0;
+        color: #ffffff;
+        font-size: 25px;
+        line-height: 1.08;
+        font-weight: 650;
+        letter-spacing: -0.03em;
+    }
+
+    .vehicle-variant {
+        margin:
+            8px 0 0;
+        color: #777f89;
+        font-size: 13px;
+    }
+
+    .vehicle-price {
+        margin:
+            23px 0 20px;
+        color: #ffffff;
+        font-size: 23px;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+    }
+
+    .vehicle-price-symbol {
+        color: #287cff;
+    }
+
+    /* =========================================================
+       SPECIFICATIONS
+    ========================================================= */
+
+    .vehicle-specs {
+        display: grid;
+        grid-template-columns:
+            repeat(2, 1fr);
+        gap:
+            13px 20px;
+        padding-top: 17px;
+        border-top:
+            1px solid rgba(255, 255, 255, 0.075);
+    }
+
+    .vehicle-spec {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        color: #858d97;
+        font-size: 12px;
+    }
+
+    .vehicle-spec-icon {
+        flex: 0 0 auto;
+        color: #287cff;
+        font-size: 10px;
+    }
+
+    /* =========================================================
+       VIEW VEHICLE
+    ========================================================= */
+
+    .vehicle-details-button {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 50px;
+        margin-top: 24px;
+        padding:
+            0 17px;
+        border:
+            1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 9px;
+        background:
+            rgba(255, 255, 255, 0.035);
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 650;
+        letter-spacing: 0.04em;
+        transition:
+            background 0.25s ease,
+            border-color 0.25s ease,
+            transform 0.25s ease;
+    }
+
+    .vehicle-details-button:hover {
+        background: #287cff;
+        border-color: #287cff;
+        color: #ffffff;
+        transform:
+            translateY(-1px);
+    }
+
+    .vehicle-details-arrow {
+        color: #287cff;
+        font-size: 17px;
+        transition:
+            transform 0.25s ease,
+            color 0.25s ease;
+    }
+
+    .vehicle-details-button:hover
+    .vehicle-details-arrow {
+        color: #ffffff;
+        transform:
+            translateX(4px);
+    }
+
+    /* =========================================================
+       EMPTY STATE
+    ========================================================= */
+
+    .vehicles-empty {
+        margin-top: 42px;
+        padding:
+            100px 25px;
+        text-align: center;
+        border:
+            1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 17px;
+        background:
+            rgba(255, 255, 255, 0.025);
+    }
+
+    .vehicles-empty-number {
+        margin-bottom: 18px;
+        color: #287cff;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+    }
+
+    .vehicles-empty h3 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 28px;
+        letter-spacing: -0.025em;
+    }
+
+    .vehicles-empty p {
+        margin:
+            12px 0 0;
+        color: #737b85;
+        font-size: 14px;
+    }
+
+    /* =========================================================
+       DATASET VEHICLES
+    ========================================================= */
+
+    .dataset-section {
+        margin-top: 80px;
+    }
+
+    .dataset-section-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 22px;
+    }
+
+    .dataset-section-title {
+        margin: 0;
+        color: #ffffff;
+        font-size: 22px;
+        font-weight: 650;
+        letter-spacing: -0.025em;
+    }
+
+    .dataset-section-subtitle {
+        margin-top: 7px;
+        color: #666e78;
+        font-size: 12px;
+    }
+
+    .dataset-page-info {
+        color: #636b75;
+        font-size: 11px;
+    }
+
+    .dataset-card {
+        position: relative;
+        min-width: 0;
+        overflow: hidden;
+        border:
+            1px solid rgba(255, 255, 255, 0.085);
+        border-radius: 17px;
+        background: #0b0d0f;
+        transition:
+            transform 0.35s ease,
+            border-color 0.35s ease,
+            box-shadow 0.35s ease;
+    }
+
+    .dataset-card:hover {
+        transform: translateY(-7px);
+        border-color:
+            rgba(40, 124, 255, 0.42);
+        box-shadow:
+            0 30px 75px rgba(0, 0, 0, 0.55),
+            0 0 35px
+            rgba(40, 124, 255, 0.055);
+    }
+
+    .dataset-image {
+        position: relative;
+        height: 280px;
+        overflow: hidden;
+        background:
+            linear-gradient(
+                135deg,
+                #111416,
+                #070809
+            );
+    }
+
+    .dataset-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+            linear-gradient(
+                to bottom,
+                transparent 40%,
+                rgba(5, 5, 5, 0.65)
+            );
+    }
+
+    .dataset-image img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transition:
+            transform 0.7s ease;
+    }
+
+    .dataset-card:hover
+    .dataset-image img {
+        transform: scale(1.045);
+    }
+
+    .dataset-no-image {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        color: #737b85;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .dataset-content {
+        padding: 25px;
+    }
+
+    .dataset-number {
+        margin-bottom: 11px;
+        color: #287cff;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.19em;
+        text-transform: uppercase;
+    }
+
+    .dataset-name {
+        margin: 0;
+        color: #ffffff;
+        font-size: 25px;
+        line-height: 1.08;
+        font-weight: 650;
+        letter-spacing: -0.03em;
+    }
+
+    .dataset-variant {
+        margin: 8px 0 0;
+        color: #777f89;
+        font-size: 13px;
+    }
+
+    .dataset-price {
+        margin: 23px 0 20px;
+        color: #ffffff;
+        font-size: 23px;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+    }
+
+    .dataset-price-symbol {
+        color: #287cff;
+    }
+
+    .dataset-specs {
+        display: grid;
+        grid-template-columns:
+            repeat(2, 1fr);
+        gap: 13px 20px;
+        padding-top: 17px;
+        border-top:
+            1px solid rgba(255, 255, 255, 0.075);
+    }
+
+    .dataset-spec {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        color: #858d97;
+        font-size: 12px;
+    }
+
+    .dataset-spec-icon {
+        flex: 0 0 auto;
+        color: #287cff;
+        font-size: 10px;
+    }
+
+    .dataset-badge {
+        display: inline-flex;
+        align-items: center;
+        margin-top: 22px;
+        padding: 7px 10px;
+        border:
+            1px solid rgba(40, 124, 255, 0.22);
+        border-radius: 999px;
+        background:
+            rgba(40, 124, 255, 0.07);
+        color: #6ea7ff;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .dataset-pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 32px;
+    }
+
+    .dataset-pagination a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 42px;
+        height: 42px;
+        padding: 0 14px;
+        border:
+            1px solid rgba(255, 255, 255, 0.10);
+        border-radius: 9px;
+        background:
+            rgba(255, 255, 255, 0.035);
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 11px;
+        transition:
+            background 0.25s ease,
+            border-color 0.25s ease;
+    }
+
+    .dataset-pagination a:hover {
+        background: #287cff;
+        border-color: #287cff;
+    }
+
+    .dataset-pagination-current {
+        color: #737b85;
+        font-size: 11px;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 1150px) {
+
+        .vehicles-grid {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+
+        .vehicle-filter form {
+            grid-template-columns:
+                1fr 1fr;
+        }
+
+        .vehicle-search-button {
+            width: 100%;
+        }
+
+    }
+
+    @media (max-width: 750px) {
+
+        .vehicles-container {
+            width:
+                min(
+                    calc(100% - 28px),
+                    1400px
+                );
+        }
+
+        .vehicles-hero {
+            min-height: 380px;
+            padding:
+                75px 0 60px;
+        }
+
+        .vehicles-title {
+            font-size:
+                clamp(
+                    48px,
+                    14vw,
+                    76px
+                );
+        }
+
+        .vehicles-description {
+            font-size: 14px;
+        }
+
+        .vehicles-hero-meta {
+            gap: 18px;
+        }
+
+        .vehicles-meta-number {
+            font-size: 17px;
+        }
+
+        .vehicle-filter {
+            padding: 11px;
+        }
+
+        .vehicle-filter form {
+            grid-template-columns: 1fr;
+        }
+
+        .vehicles-results-header {
+            align-items: flex-start;
+            flex-direction: column;
+            margin-top: 42px;
+        }
+
+        .vehicles-results-line {
+            display: none;
+        }
+
+        .vehicles-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .vehicle-image {
+            height: 245px;
+        }
+
+        .vehicle-content {
+            padding: 21px;
+        }
+
+        .dataset-section-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+    }
+
+    @media (max-width: 420px) {
+
+        .vehicles-hero-meta {
+            flex-wrap: wrap;
+        }
+
+        .vehicles-meta-divider {
+            display: none;
+        }
+
+        .vehicle-specs {
+            gap:
+                12px 10px;
+        }
+
+    }
+
+</style>
+
+<!-- =========================================================
+     VEHICLES PAGE
+========================================================= -->
+
+<section class="vehicles-page">
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <div class="vehicles-hero">
+
+        <div class="vehicles-container">
+
+            <div class="vehicles-eyebrow">
+                CarCraft / Collection
+            </div>
+
+            <h1 class="vehicles-title">
+                The Machines.
+            </h1>
+
+            <p class="vehicles-description">
+                Explore the CarCraft collection.
+                Discover performance, design and technology
+                across every machine.
+            </p>
+
+            <div class="vehicles-hero-meta">
+
+                <div class="vehicles-meta-item">
+
+                    <span class="vehicles-meta-number">
+                        01
+                    </span>
+
+                    <span class="vehicles-meta-label">
+                        Collection
+                    </span>
+
+                </div>
+
+                <div class="vehicles-meta-divider"></div>
+
+                <div class="vehicles-meta-item">
+
+                    <span class="vehicles-meta-number">
+                        {{ vehicles|length }}
+                    </span>
+
+                    <span class="vehicles-meta-label">
+                        Available
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <div class="vehicles-container vehicles-content">
+
+        <!-- =================================================
+             FILTERS
+        ================================================== -->
+
+        <div class="vehicle-filter">
+
+            <form method="GET">
+
+                <!-- SEARCH -->
+
+                <input
+                    type="text"
+                    name="search"
+                    class="vehicle-input"
+                    placeholder="Search brand or model..."
+                    value="{{ search }}"
+                >
+
+                <!-- FUEL -->
+
+                <select
+                    name="fuel"
+                    class="vehicle-select"
+                >
+
+                    <option value="">
+                        All Fuel Types
+                    </option>
+
+                    <option
+                        value="PETROL"
+                        {% if fuel == "PETROL" %}
+                            selected
+                        {% endif %}
+                    >
+                        Petrol
+                    </option>
+
+                    <option
+                        value="DIESEL"
+                        {% if fuel == "DIESEL" %}
+                            selected
+                        {% endif %}
+                    >
+                        Diesel
+                    </option>
+
+                    <option
+                        value="ELECTRIC"
+                        {% if fuel == "ELECTRIC" %}
+                            selected
+                        {% endif %}
+                    >
+                        Electric
+                    </option>
+
+                    <option
+                        value="HYBRID"
+                        {% if fuel == "HYBRID" %}
+                            selected
+                        {% endif %}
+                    >
+                        Hybrid
+                    </option>
+
+                    <option
+                        value="CNG"
+                        {% if fuel == "CNG" %}
+                            selected
+                        {% endif %}
+                    >
+                        CNG
+                    </option>
+
+                </select>
+
+                <!-- TRANSMISSION -->
+
+                <select
+                    name="transmission"
+                    class="vehicle-select"
+                >
+
+                    <option value="">
+                        All Transmissions
+                    </option>
+
+                    <option
+                        value="MANUAL"
+                        {% if transmission == "MANUAL" %}
+                            selected
+                        {% endif %}
+                    >
+                        Manual
+                    </option>
+
+                    <option
+                        value="AUTOMATIC"
+                        {% if transmission == "AUTOMATIC" %}
+                            selected
+                        {% endif %}
+                    >
+                        Automatic
+                    </option>
+
+                    <option
+                        value="AMT"
+                        {% if transmission == "AMT" %}
+                            selected
+                        {% endif %}
+                    >
+                        AMT
+                    </option>
+
+                    <option
+                        value="DCT"
+                        {% if transmission == "DCT" %}
+                            selected
+                        {% endif %}
+                    >
+                        DCT
+                    </option>
+
+                </select>
+
+                <!-- SEARCH BUTTON -->
+
+                <button
+                    type="submit"
+                    class="vehicle-search-button"
+                    aria-label="Search vehicles"
+                >
+                    ⌕
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- =================================================
+             RESULTS HEADER
+        ================================================== -->
+
+        <div class="vehicles-results-header">
+
+            <div>
+
+                <h2 class="vehicles-results-title">
+                    Vehicle Collection
+                </h2>
+
+                <div class="vehicles-results-subtitle">
+                    Browse available machines
+                </div>
+
+            </div>
+
+            <div class="vehicles-results-line"></div>
+
+        </div>
+
+        <!-- =================================================
+             VEHICLES
+        ================================================== -->
+
+        {% if vehicles %}
+
+            <div class="vehicles-grid">
+
+                {% for vehicle in vehicles %}
+
+                    <article class="vehicle-card">
+
+                        <!-- =================================
+                             VEHICLE IMAGE
+                        ================================== -->
+
+                        <div class="vehicle-image">
+
+                            {% if vehicle.image %}
+
+                                <img
+                                    src="{{ vehicle.image.url }}"
+                                    alt="{{ vehicle.brand }} {{ vehicle.model }}"
+                                    loading="lazy"
+                                >
+
+                            {% else %}
+
+                                <div class="vehicle-no-image">
+                                    {{ vehicle.brand }}
+                                    {{ vehicle.model }}
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- =================================
+                             VEHICLE INFORMATION
+                        ================================== -->
+
+                        <div class="vehicle-content">
+
+                            <div class="vehicle-number">
+
+                                {{ vehicle.year }}
+
+                                /
+
+                                {{ vehicle.get_fuel_type_display|upper }}
+
+                            </div>
+
+                            <h3 class="vehicle-name">
+
+                                {{ vehicle.brand }}
+                                {{ vehicle.model }}
+
+                            </h3>
+
+                            {% if vehicle.variant %}
+
+                                <p class="vehicle-variant">
+                                    {{ vehicle.variant }}
+                                </p>
+
+                            {% endif %}
+
+                            <div class="vehicle-price">
+
+                                <span class="vehicle-price-symbol">
+                                    ₹
+                                </span>{{ vehicle.price }}
+
+                            </div>
+
+                            <!-- =================================
+                                 SPECIFICATIONS
+                            ================================== -->
+
+                            <div class="vehicle-specs">
+
+                                <div class="vehicle-spec">
+
+                                    <span class="vehicle-spec-icon">
+                                        ◉
+                                    </span>
+
+                                    <span>
+                                        {{ vehicle.year }}
+                                    </span>
+
+                                </div>
+
+                                <div class="vehicle-spec">
+
+                                    <span class="vehicle-spec-icon">
+                                        ◆
+                                    </span>
+
+                                    <span>
+                                        {{ vehicle.get_fuel_type_display }}
+                                    </span>
+
+                                </div>
+
+                                <div class="vehicle-spec">
+
+                                    <span class="vehicle-spec-icon">
+                                        ⚙
+                                    </span>
+
+                                    <span>
+                                        {{ vehicle.get_transmission_display }}
+                                    </span>
+
+                                </div>
+
+                                <div class="vehicle-spec">
+
+                                    <span class="vehicle-spec-icon">
+                                        ↗
+                                    </span>
+
+                                    <span>
+                                        {{ vehicle.mileage }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            <!-- =================================
+                                 DETAILS
+                            ================================== -->
+
+                            <a
+                                href="{% url 'vehicle_detail' vehicle.id %}"
+                                class="vehicle-details-button"
+                            >
+
+                                <span>
+                                    View Vehicle
+                                </span>
+
+                                <span
+                                    class="vehicle-details-arrow"
+                                >
+                                    →
+                                </span>
+
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <!-- =============================================
+                 EMPTY STATE
+            ============================================== -->
+
+            <div class="vehicles-empty">
+
+                <div class="vehicles-empty-number">
+                    00 / EMPTY
+                </div>
+
+                <h3>
+                    No vehicles found.
+                </h3>
+
+                <p>
+                    Try changing your search or filter options.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+        <!-- =================================================
+             DATASET VEHICLES
+        ================================================== -->
+
+        {% if dataset_vehicles %}
+
+            <section class="dataset-section">
+
+                <div class="dataset-section-header">
+
+                    <div>
+
+                        <h2 class="dataset-section-title">
+                            Dataset Collection
+                        </h2>
+
+                        <div class="dataset-section-subtitle">
+                            Explore vehicles from the CarCraft automotive dataset
+                        </div>
+
+                    </div>
+
+                    <div class="dataset-page-info">
+                        Page {{ dataset_vehicles.number }}
+                        of {{ dataset_vehicles.paginator.num_pages }}
+                    </div>
+
+                </div>
+
+                <div class="vehicles-grid">
+
+                    {% for vehicle in dataset_vehicles %}
+
+                        <article class="dataset-card">
+
+                            <div class="dataset-image">
+
+                                {% if vehicle.image %}
+
+                                    <img
+                                        src="{{ vehicle.image.url }}"
+                                        alt="{{ vehicle.brand }} {{ vehicle.model_name }}"
+                                        loading="lazy"
+                                    >
+
+                                {% elif vehicle.fallback_image and vehicle.fallback_image.image %}
+
+                                    <img
+                                        src="{{ vehicle.fallback_image.image.url }}"
+                                        alt="{{ vehicle.brand }} {{ vehicle.model_name }}"
+                                        loading="lazy"
+                                    >
+
+                                {% else %}
+
+                                    <div class="dataset-no-image">
+                                        {{ vehicle.brand }}
+                                        {{ vehicle.model_name }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                            <div class="dataset-content">
+
+                                <div class="dataset-number">
+                                    DATA / {{ vehicle.vehicle_id }}
+                                </div>
+
+                                <h3 class="dataset-name">
+                                    {{ vehicle.brand }}
+                                    {{ vehicle.model_name }}
+                                </h3>
+
+                                {% if vehicle.model_variant %}
+
+                                    <p class="dataset-variant">
+                                        {{ vehicle.model_variant }}
+                                    </p>
+
+                                {% endif %}
+
+                                {% if vehicle.price %}
+
+                                    <div class="dataset-price">
+                                        <span class="dataset-price-symbol">₹</span>{{ vehicle.price }}
+                                    </div>
+
+                                {% endif %}
+
+                                <div class="dataset-specs">
+
+                                    <div class="dataset-spec">
+
+                                        <span class="dataset-spec-icon">
+                                            ◉
+                                        </span>
+
+                                        <span>
+                                            {{ vehicle.year }}
+                                        </span>
+
+                                    </div>
+
+                                    <div class="dataset-spec">
+
+                                        <span class="dataset-spec-icon">
+                                            ◆
+                                        </span>
+
+                                        <span>
+                                            {{ vehicle.fuel_type }}
+                                        </span>
+
+                                    </div>
+
+                                    <div class="dataset-spec">
+
+                                        <span class="dataset-spec-icon">
+                                            ⚙
+                                        </span>
+
+                                        <span>
+                                            {{ vehicle.transmission }}
+                                        </span>
+
+                                    </div>
+
+                                    <div class="dataset-spec">
+
+                                        <span class="dataset-spec-icon">
+                                            ↗
+                                        </span>
+
+                                        <span>
+                                            {{ vehicle.mileage_kmpl }}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="dataset-badge">
+                                    Dataset Vehicle
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+                <div class="dataset-pagination">
+
+                    {% if dataset_vehicles.has_previous %}
+
+                        <a
+                            href="?search={{ search|urlencode }}&fuel={{ fuel|urlencode }}&transmission={{ transmission|urlencode }}&dataset_page={{ dataset_vehicles.previous_page_number }}"
+                        >
+                            ←
+                        </a>
+
+                    {% endif %}
+
+                    <span class="dataset-pagination-current">
+
+                        {{ dataset_vehicles.number }}
+                        /
+                        {{ dataset_vehicles.paginator.num_pages }}
+
+                    </span>
+
+                    {% if dataset_vehicles.has_next %}
+
+                        <a
+                            href="?search={{ search|urlencode }}&fuel={{ fuel|urlencode }}&transmission={{ transmission|urlencode }}&dataset_page={{ dataset_vehicles.next_page_number }}"
+                        >
+                            →
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}
